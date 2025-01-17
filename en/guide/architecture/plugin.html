@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Plug-in | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Plug-in" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/plugin.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/plugin.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Plug-in" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Plug-in","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/plugin.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="plug-in">Plug-in</h1>
+
+<p><strong>BotSharp</strong> adopts a <code class="language-plaintext highlighter-rouge">plug-in</code> architecture design, and the modules are independent of each other. With <code class="language-plaintext highlighter-rouge">Conversation</code> as the core, each plug-in completes various functionalities (such as adding LLM provider and Text Embedding provider) through the Hook mechanism. Regarding the Hooks provided by the system, you can refer to the special <a href="/botsharp-doc/en/guide/architecture/hooks.html">Hook section</a>.</p>
+
+<p>Here we will introduce how to add a new plug-in to extend your LLM application. We still use the example of PizzaBot to illustrate how to complete this task.</p>
+
+<ol>
+  <li>
+    <p>Add Class Library
+Added a new class library called BotSharp.Plugin.PizzaBot and add referece to the web start application</p>
+  </li>
+  <li>Implement Interface
+Add a new class named <code class="language-plaintext highlighter-rouge">PizzaBotPlugin</code> and implement interface <code class="language-plaintext highlighter-rouge">IBotSharpPlugin</code>.
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">namespace</span> <span class="nn">BotSharp.Plugin.PizzaBot</span><span class="p">;</span>
+
+ <span class="k">public</span> <span class="k">class</span> <span class="nc">PizzaBotPlugin</span> <span class="p">:</span> <span class="n">IBotSharpPlugin</span>
+ <span class="p">{</span>
+     <span class="k">public</span> <span class="k">void</span> <span class="nf">RegisterDI</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">,</span> <span class="n">IConfiguration</span> <span class="n">config</span><span class="p">)</span>
+     <span class="p">{</span>
+         <span class="c1">// Register callback function</span>
+         <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IFunctionCallback</span><span class="p">,</span> <span class="n">MakePaymentFn</span><span class="p">&gt;();</span>
+
+         <span class="c1">// Register hooks</span>
+         <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IAgentHook</span><span class="p">,</span> <span class="n">PizzaBotAgentHook</span><span class="p">&gt;();</span>
+     <span class="p">}</span>
+ <span class="p">}</span>    
+</code></pre></div>    </div>
+  </li>
+  <li>Add to Settings
+Add plugin to appsettings.json.
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="nl">"PluginLoader"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"Assemblies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+         </span><span class="s2">"BotSharp.Plugin.PizzaBot"</span><span class="w">
+     </span><span class="p">]</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>After starting the web project, you should see a successful loading message printed in the Console.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loaded plugin PizzaBotPlugin from BotSharp.Plugin.PizzaBot.
+</code></pre></div></div>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/architecture/plugin.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

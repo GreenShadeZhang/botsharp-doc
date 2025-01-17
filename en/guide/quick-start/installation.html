@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Installation | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Installation" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/quick-start/installation.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/quick-start/installation.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Installation" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Installation","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/quick-start/installation.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="installation">Installation</h1>
+
+<p>BotSharp strictly follows the modular design principle and adopts a structure in which views and logic are separated. It also provides a complete Web API interface to integrate with your own system. At the architectural level, Hook and EvenT are designed for different purposes, which can expand Chatbot’s dialogue capabilities without changing the kernel.</p>
+
+<h2 id="run-locally-in-development-mode">Run locally in development mode</h2>
+
+<p>If you are a .NET developer and want to develop extensions or fix bug for BotSharp, you would hit F5 to run it locally in debug mode. 
+Make sure the <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">Microsoft .NET SDK</a> 6.0+ build environment
+Building solution using dotnet CLI (preferred).</p>
+
+<h3 id="clone-the-source-code-and-build">Clone the source code and build</h3>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">git</span><span class="w"> </span><span class="nx">clone</span><span class="w"> </span><span class="nx">https://github.com/SciSharp/BotSharp</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">cd</span><span class="w"> </span><span class="nx">BotSharp</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">dotnet</span><span class="w"> </span><span class="nx">build</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="update-configuration">Update configuration</h3>
+<p><code class="language-plaintext highlighter-rouge">BotSharp</code> can work with serveral LLM providers. Update <code class="language-plaintext highlighter-rouge">appsettings.json</code> in your project. Below config is tasking Azure OpenAI as the LLM backend</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"LlmProviders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-openai"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Models"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-35-turbo"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ApiKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gpt-35-turbo.openai.azure.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"PromptCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0015</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"CompletionCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-35-turbo-instruct"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ApiKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gpt-35-turbo-instruct.openai.azure.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"PromptCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0015</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"CompletionCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="run-backend-web-project">Run backend web project</h3>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">dotnet</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nt">--project</span><span class="w"> </span><span class="nx">src/WebStarter</span><span class="w">
+</span></code></pre></div></div>
+<p><img src="assets/BackendServiceHomeScreenshot.png" alt="alt text" title="Title" /></p>
+
+<h3 id="open-rest-apis">Open REST APIs</h3>
+<p>You can access the APIs in browser through http://localhost:5500/swagger
+<img src="assets/APIHome.png" alt="alt text" title="Title" /></p>
+
+<h3 id="test-using-the-postman">Test using the Postman</h3>
+<p>We have publicly shared the API collection of <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/overview">Postman</a>, which is convenient for developers to develop quickly.
+<img src="assets/APIPostman.png" alt="alt text" title="Title" /></p>
+
+<p>So far, you have set up the Bot’s running and development environment, but you can’t actually test the Chatbot. The next step is about how to <a href="../agent/account">Create an Agent</a> and start a conversation with the Chatbot.</p>
+
+<p><strong>Ignore below section if you’re going to just use REST API to interact with your bot.</strong></p>
+
+<h3 id="launch-a-botsharp-ui-optional">Launch a BotSharp UI (Optional)</h3>
+<p>BotSharp has an official front-end project to be used in conjunction with the backend. The main function of this project is to allow developers to visualize various configurations of the backend.</p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">git</span><span class="w"> </span><span class="nx">clone</span><span class="w"> </span><span class="nx">https://github.com/SciSharp/BotSharp-UI</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">cd</span><span class="w"> </span><span class="nx">BotSharp-UI</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">npm</span><span class="w"> </span><span class="nx">install</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">dev</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Update API url in <code class="language-plaintext highlighter-rouge">.env</code> to your localhost BotSharp backend service.</p>
+<div class="language-config highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PUBLIC_SERVICE_URL</span>=<span class="n">http</span>://<span class="n">localhost</span>:<span class="m">5500</span>
+<span class="n">PUBLIC_LIVECHAT_HOST</span>=<span class="n">http</span>://<span class="n">localhost</span>:<span class="m">5015</span>
+</code></pre></div></div>
+
+<p>Point your web browser at http://localhost:5015 and enjoy Chatbot with BotSharp.</p>
+
+<p><img src="/botsharp-doc/en/guide/quick-start/assets/BotSharp-UI-Router.png" alt="BotSharp UI Router" /></p>
+
+<h2 id="install-in-nuget">Install in NuGet</h2>
+<p>If you don’t want to use the source code to experience this framework, you can also directly install the <a href="https://www.nuget.org/packages?q=BotSharp">NuGet packages</a> released by BotSharp, and install different function packages according to the needs of your project. Before installing, please read the documentation carefully to understand the functions that different modules can provide.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Install-Package</span><span class="w"> </span><span class="nx">BotSharp.Core</span><span class="w">
+</span></code></pre></div></div>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/quick-start/installation.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

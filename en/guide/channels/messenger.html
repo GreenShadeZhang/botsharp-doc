@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Messenger | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Messenger" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/channels/messenger.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/channels/messenger.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Messenger" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Messenger","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/channels/messenger.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="messenger">Messenger</h1>
+
+<p>The BotSharp Facebook integration allows you to easily create a Facebook Messenger bot with natural language understanding, based on the BotSharp technology.</p>
+
+<p><strong>Setting Up Facebook</strong></p>
+
+<p>In order to set up the Facebook integration for your agent, you’ll need the following:</p>
+
+<ul>
+  <li>
+    <p>A Facebook account</p>
+  </li>
+  <li>
+    <p>A Facebook page to add your agent to</p>
+  </li>
+</ul>
+
+<p>When a user visits your page and sends you a message, they’ll be talking to your agent.</p>
+
+<p><strong>Create a Facebook App</strong></p>
+
+<ol>
+  <li>Log into the <code class="language-plaintext highlighter-rouge">Facebook Developer Console</code>_.</li>
+  <li>Click on <strong>My Apps</strong> in the upper right hand corner.</li>
+  <li>Click on <strong>Add a New App</strong> and enter a display name and contact email.</li>
+  <li>Click <strong>Create App ID</strong>.</li>
+  <li>On the next page, click the <strong>Set up</strong> button for the <strong>Messenger</strong> option.</li>
+  <li>Under the <strong>Token Generation</strong> section, choose one of your Facebook pages (<strong>Create a new page</strong> if not exist).</li>
+</ol>
+
+<p>This will generate a <strong>Page Access Token</strong>. Keep this token handy, as you’ll need to enter it in BotSharp.</p>
+
+<p><strong>Setting Up BotSharp</strong></p>
+
+<ol>
+  <li>Click on the Integrations option in the left menu and switch on Facebook Messenger. In the dialog that opens, enter the following information:
+    <ul>
+      <li><strong>Verify Token</strong> - This can be any string and is solely for your purposes</li>
+      <li><strong>Page Access Token</strong> - Enter the token generated in the Facebook Developer Console</li>
+    </ul>
+  </li>
+  <li>Or edit agents.json under App_Data\DbInitializer\Agents, update <strong>Page Access Token</strong> and <strong>Verify Token</strong>.</li>
+  <li>Click the <strong>Start</strong> button.</li>
+</ol>
+
+<p><strong>Webhook Configuration</strong></p>
+
+<p>To configure your agent’s webhook, return to the Facebook Developer Console:</p>
+
+<ol>
+  <li>Click the Setup Webhooks button under the Webhooks section and enter the following information:
+    <ul>
+      <li><strong>Callback URL</strong> - This is the URL provided on the Facebook Messenger integration page</li>
+      <li><strong>Verify Token</strong> - This is the token you created</li>
+      <li>Check the <strong>messages</strong> and <strong>messaging_postbacks</strong> options under Subscription Fields</li>
+    </ul>
+  </li>
+  <li>Click the <strong>Verify and Save</strong> button.</li>
+</ol>
+
+<p><strong>Testing</strong></p>
+
+<p>In order to make your agent available for testing, you’ll need to make your app public:</p>
+
+<ol>
+  <li>Click on <strong>App Review</strong> in the left menu of the Facebook Developer Console.</li>
+  <li>Click on the switch under <strong>Make APP_NAME public</strong>? You’ll be prompted to choose a category for your app.</li>
+  <li>Choose <strong>Apps for Messenger</strong> from the list</li>
+  <li>Click the <strong>Confirm</strong> button.</li>
+</ol>
+
+<p>You will also need to set a username for your page. This is the username users will chat with when using your agent. To set the username, click the <strong>Create Page @Username</strong> link under your page’s profile picture and title.</p>
+
+<p>.. _Facebook Developer Console: https://developers.facebook.com</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/channels/messenger.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

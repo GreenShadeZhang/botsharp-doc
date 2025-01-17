@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>入门指南 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="入门指南" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/quick-start/get-started.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/quick-start/get-started.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="入门指南" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"入门指南","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/quick-start/get-started.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="入门指南">入门指南</h1>
+
+<h3 id="开始使用-pizza-bot">开始使用 Pizza Bot</h3>
+
+<p>为了让开发者尽快体验到 BotSharp 的便利性，我们设计了一个基础示例项目 PizzaBot。这个示例允许你在本地机器上快速运行。如果你想在本地运行此示例，需要下载 <code class="language-plaintext highlighter-rouge">llama-2</code> 量化模型并使用 <code class="language-plaintext highlighter-rouge">gguf</code> 格式。</p>
+
+<h3 id="在命令行中运行">在命令行中运行</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/SciSharp/BotSharp
+<span class="nb">cd </span>BotSharp
+<span class="c"># 使用包引用运行 PizzaBot 示例</span>
+dotnet run <span class="nt">--project</span> .<span class="se">\s</span>rc<span class="se">\W</span>ebStarter<span class="se">\W</span>ebStarter.csproj <span class="nt">-p</span> <span class="nv">SolutionName</span><span class="o">=</span>PizzaBot
+
+<span class="c"># 使用 BotSharp 包含所有依赖项目的最新源代码</span>
+dotnet run <span class="nt">--project</span> .<span class="se">\s</span>rc<span class="se">\W</span>ebStarter<span class="se">\W</span>ebStarter.csproj <span class="nt">-p</span> <span class="nv">SolutionName</span><span class="o">=</span>BotSharp
+</code></pre></div></div>
+
+<p>运行后，你将看到如下运行界面。</p>
+
+<p><img src="/botsharp-doc/zh/guide/quick-start/assets/PizzaBotSample3.png" alt="Pizza Bot Starter" /></p>
+
+<p>接下来，尝试从 <code class="language-plaintext highlighter-rouge">Open API</code> 访问聊天功能，我们公开了 <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/collection/1346299-d1a31c49-825d-4449-bdc8-936c66ff6bfd">Postman 集合</a>。记得将环境设置为 <code class="language-plaintext highlighter-rouge">localhost</code>。</p>
+
+<p><img src="/botsharp-doc/zh/guide/quick-start/assets/PizzaBotSample4.png" alt="Pizza Bot Starter" /></p>
+
+<h3 id="启动-ui">启动 UI</h3>
+
+<p>BotSharp 有一个官方前端项目，可以与后端配合使用。该项目的主要功能是让开发者可视化后端的各种配置。</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">git clone https://github.com/SciSharp/BotSharp-UI
+cd BotSharp-UI
+npm install
+npm run dev
+</span></code></pre></div></div>
+
+<p>访问 http://localhost:5015/</p>
+
+<p><img src="/botsharp-doc/zh/guide/quick-start/assets/BotSharp-UI-Router.png" alt="BotSharp UI Router" /></p>
+
+<h3 id="以调试模式运行">以调试模式运行</h3>
+
+<p>如果你安装了 Visual Studio，可以以调试模式运行。
+双击 <code class="language-plaintext highlighter-rouge">PizzaBot</code> 启动解决方案。</p>
+
+<p><img src="/botsharp-doc/zh/guide/quick-start/assets/PizzaBotSample1.png" alt="Pizza Bot" /></p>
+
+<p>点击 <code class="language-plaintext highlighter-rouge">WebStarter</code> 以调试模式运行，或者你也可以从命令行启动</p>
+
+<p><img src="/botsharp-doc/zh/guide/quick-start/assets/PizzaBotSample2.png" alt="Pizza Bot Starter" /></p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/quick-start/get-started.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

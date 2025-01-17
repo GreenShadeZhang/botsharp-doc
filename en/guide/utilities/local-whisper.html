@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Local Whisper | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Local Whisper" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/utilities/local-whisper.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/utilities/local-whisper.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Local Whisper" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Local Whisper","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/utilities/local-whisper.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="local-whisper">Local Whisper</h1>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>Whisper, an advanced automatic speech recognition (ASR) system developed by OpenAI, represents a significant leap forward in speech technology. This system was trained on an enormous dataset comprising 680,000 hours of supervised data, which includes a wide range of languages and tasks, all sourced from the web. The diversity and scale of this dataset play a crucial role in enhancing Whisper’s ability to accurately recognize and transcribe speech. As a result, it exhibits improved robustness in dealing with various accents, background noise, and complex technical language, making it a versatile and reliable tool for a broad spectrum of applications.</p>
+
+<h3 id="get-started-with-local-whisper">Get started with Local Whisper</h3>
+<p>To begin using the local Whisper model, the Whisper.net library must be added as a dependency. This can be achieved through:</p>
+<ul>
+  <li>NuGet Manager
+  <br />
+  <!-- ![NuGet Manager](assets/NuGet-Local-Whisper.png) --></li>
+  <li>Package Manager Console
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Install-Package</span><span class="w"> </span><span class="nx">Whisper.net</span><span class="w">
+</span><span class="n">Install-Package</span><span class="w"> </span><span class="nx">Whisper.net.Runtime</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>Add a package reference in your csproj
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;PackageReference Include="Whisper.net" Version="1.5.0" /&gt;
+  &lt;PackageReference Include="Whisper.net.Runtime" Version="1.5.0" /&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>The following Whisper model types would be available through the use of plug-ins:</p>
+
+<ul>
+  <li>Tiny</li>
+  <li>TinyEn</li>
+  <li>Base</li>
+  <li>BaseEn</li>
+  <li>Small</li>
+  <li>SmallEn</li>
+  <li>Medium</li>
+  <li>MediumEn</li>
+  <li>LargeV1</li>
+  <li>LargeV2</li>
+  <li>LargeV3</li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">NativeWhisperProvider</code> is designed to process all input audio files using the local Whisper model. Users have the ability to set the file path for audio files, with current support for mp3 and wav formats only. By default, the TinyEn model type is used for transcribing audio into text, but this can be customized based on the user’s requirements. This flexibility allows BotSharp to efficiently handle various transcription needs, ensuring accurate and reliable text outputs from audio inputs.</p>
+
+<p>Once program starts, you can upload your audio file in the ChatUI.</p>
+
+<!-- ![Upload Audio in the ChatUI](assets/Steps-Local-Whisper.png) -->
+
+<p>The transcript will be displayed in the response.</p>
+
+<!-- ![Response of Whisper Model](assets/Result-Local-Whisper.png) -->
+
+<h3 id="response-time">Response Time</h3>
+<p>When using a CPU locally, the response time is impressively fast. For instance, it can transcribe a 10-minute audio clip into text in approximately 30 seconds. For shorter audio files, ranging from 3 to 5 minutes in duration, the transcription response is around a few seconds or even quicker.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/utilities/local-whisper.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

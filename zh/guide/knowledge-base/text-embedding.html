@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>文本嵌入 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="文本嵌入" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/knowledge-base/text-embedding.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/knowledge-base/text-embedding.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="文本嵌入" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"文本嵌入","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/knowledge-base/text-embedding.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="文本嵌入">文本嵌入</h1>
+
+<p>文本嵌入将人类语言表示为计算机可理解的形式，从而实现语义搜索等任务。<code class="language-plaintext highlighter-rouge">BotSharp</code> 支持多种嵌入方法，并通过工程抽象支持更多嵌入方法的扩展。</p>
+
+<h2 id="fasttext-嵌入">fastText 嵌入</h2>
+<p><a href="https://fasttext.cc/">FastText</a> 是一个开源、免费、轻量级的库，允许用户学习文本表示和文本分类。它可以在标准的通用硬件上运行。模型可以在后期缩小尺寸，甚至可以适应移动设备。为了使用 fastText 嵌入方法，请确保安装 <a href="https://www.nuget.org/packages/BotSharp.Plugin.MetaAI">BotSharp.Plugin.MetaAI</a>，并在本地设置中启用此插件。还需要<a href="https://fasttext.cc/docs/en/english-vectors.html">下载</a> fastText 的预训练模型，并在设置中指定模型的位置。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"PluginLoader"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"Assemblies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"BotSharp.Plugin.MetaAI"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"Plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"KnowledgeBasePlugin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"MemVecDbPlugin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"MetaAiPlugin"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"KnowledgeBase"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"TextEmbedding"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fastTextEmbeddingProvider"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"MetaAi"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"fastText"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"ModelPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"crawl-300d-2M-subword.bin"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="llamasharptextembeddingprovider">LLamaSharp.TextEmbeddingProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">LLamaSharp</code> 也提供 LLM 嵌入。有关 LLamaSharp 的更多操作方法，请参考其<a href="https://github.com/SciSharp/LLamaSharp">仓库地址</a>。
+你需要下载相应的 LLM 开源模型，如 <code class="language-plaintext highlighter-rouge">llama2</code> 到本地。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"PluginLoader"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"Assemblies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"BotSharp.Core"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"Plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"KnowledgeBasePlugin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"MemVecDbPlugin"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"LLamaSharpPlugin"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"KnowledgeBase"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"TextEmbedding"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LLamaSharp.TextEmbeddingProvider"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"LlamaSharp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"ModelPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-2-7b-chat.ggmlv3.q3_K_S.bin"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="tensorflow-bert">TensorFlow BERT</h2>
+
+<h2 id="训练你自己的嵌入">训练你自己的嵌入</h2>
+<p>你也可以使用 <a href="https://github.com/SciSharp/TensorFlow.NET">TensorFlow.NET</a> 从头开始训练自己的嵌入模型。</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/knowledge-base/text-embedding.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

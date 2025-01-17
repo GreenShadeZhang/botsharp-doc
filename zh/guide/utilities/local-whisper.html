@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>本地 Whisper | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="本地 Whisper" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/utilities/local-whisper.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/utilities/local-whisper.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="本地 Whisper" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"本地 Whisper","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/utilities/local-whisper.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="本地-whisper">本地 Whisper</h1>
+
+<h3 id="介绍">介绍</h3>
+
+<p>Whisper 是由 OpenAI 开发的先进自动语音识别 (ASR) 系统，代表了语音技术的重大进步。该系统在包含 680,000 小时监督数据的庞大数据集上进行了训练，这些数据包括从网络上获取的各种语言和任务。数据集的多样性和规模在提高 Whisper 准确识别和转录语音的能力方面起着关键作用。因此，它在处理各种口音、背景噪音和复杂技术语言方面表现出更强的鲁棒性，使其成为广泛应用的多功能可靠工具。</p>
+
+<h3 id="开始使用本地-whisper">开始使用本地 Whisper</h3>
+<p>要开始使用本地 Whisper 模型，必须将 Whisper.net 库添加为依赖项。这可以通过以下方式实现：</p>
+<ul>
+  <li>NuGet 管理器
+  <br />
+  <!-- ![NuGet 管理器](assets/NuGet-Local-Whisper.png) --></li>
+  <li>包管理器控制台
+    <div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Install-Package</span><span class="w"> </span><span class="nx">Whisper.net</span><span class="w">
+</span><span class="n">Install-Package</span><span class="w"> </span><span class="nx">Whisper.net.Runtime</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>在你的 csproj 文件中添加包引用
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;PackageReference Include="Whisper.net" Version="1.5.0" /&gt;
+  &lt;PackageReference Include="Whisper.net.Runtime" Version="1.5.0" /&gt;
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>通过使用插件，可以使用以下 Whisper 模型类型：</p>
+
+<ul>
+  <li>Tiny</li>
+  <li>TinyEn</li>
+  <li>Base</li>
+  <li>BaseEn</li>
+  <li>Small</li>
+  <li>SmallEn</li>
+  <li>Medium</li>
+  <li>MediumEn</li>
+  <li>LargeV1</li>
+  <li>LargeV2</li>
+  <li>LargeV3</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">NativeWhisperProvider</code> 旨在使用本地 Whisper 模型处理所有输入音频文件。用户可以设置音频文件的路径，目前仅支持 mp3 和 wav 格式。默认情况下，TinyEn 模型类型用于将音频转录为文本，但可以根据用户需求进行自定义。这种灵活性使 BotSharp 能够高效处理各种转录需求，确保从音频输入到文本输出的准确性和可靠性。</p>
+
+<p>程序启动后，您可以在 ChatUI 中上传音频文件。</p>
+
+<!-- ![在 ChatUI 中上传音频](assets/Steps-Local-Whisper.png) -->
+
+<p>转录结果将显示在响应中。</p>
+
+<!-- ![Whisper 模型的响应结果](assets/Result-Local-Whisper.png) -->
+
+<h3 id="响应时间">响应时间</h3>
+<p>在本地使用 CPU 时，响应时间非常快。例如，它可以在大约 30 秒内将 10 分钟的音频剪辑转录为文本。对于 3 到 5 分钟的较短音频文件，转录响应时间大约为几秒钟甚至更快。</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/utilities/local-whisper.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

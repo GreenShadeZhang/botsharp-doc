@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>智能体介绍 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="智能体介绍" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/agent/intro.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/agent/intro.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="智能体介绍" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"智能体介绍","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/agent/intro.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="智能体介绍">智能体介绍</h1>
+
+<p>智能体帮助您将用户句子（非结构化数据）处理为结构化数据，以便您可以使用这些数据返回适当的响应。</p>
+
+<p>智能体是包含提示词和功能 Json Schema 定义、少量示例和知识库数据的集合。您可以创建多个不同的智能体以在特定领域执行特定操作。BotSharp 内置了对智能体的维护，包括创建、更新和删除、导入和导出。智能体分为 <code class="language-plaintext highlighter-rouge">任务智能体</code>、<code class="language-plaintext highlighter-rouge">路由（非任务）智能体</code>、<code class="language-plaintext highlighter-rouge">评估智能体</code> 和 <code class="language-plaintext highlighter-rouge">静态智能体</code>。业务领域智能体属于任务智能体，路由器属于非任务智能体，静态智能体没有与外部环境交互的能力。</p>
+
+<h2 id="我的智能体">我的智能体</h2>
+<p>创建平台账户后，您可以开始进入创建智能体的步骤。</p>
+
+<h3 id="智能体创建">智能体创建</h3>
+<p>假设我们需要编写一个披萨餐厅订单 AI 机器人。首先，指定名称和描述，然后调用 <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/request/1346299-dc57eddb-a3eb-41f1-9c6c-ac65f9d8d510">智能体创建</a> API 创建一个新机器人，系统将返回一个内部使用的智能体 ID。此 ID 需要在后续交互中使用。</p>
+
+<p><img src="/botsharp-doc/zh/guide/agent/assets/agent-creation.png" alt="Alt text" /></p>
+
+<h3 id="智能体指令">智能体指令</h3>
+<p>BotSharp 使用最新的大语言模型进行自然语言理解，可以与 OpenAI 的 ChatGPT 交互，也支持最广泛使用的开源大语言模型 <a href="https://ai.meta.com/blog/large-language-model-llama-meta-ai/">LLaMA</a> 及其微调模型。在此示例中，我们使用 <a href="https://azure.microsoft.com/en-us/products/ai-services/openai-service">Azure OpenAI</a> 作为 LLM 引擎。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"LlmProviders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-openai"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Models"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-35-turbo"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"ApiKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gpt-35-turbo.openai.azure.com/"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"PromptCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0015</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"CompletionCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+        </span><span class="p">}]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>如果您使用安装包运行，请确保已安装 <a href="https://www.nuget.org/packages/BotSharp.Plugin.AzureOpenAI">BotSharp.Plugin.AzureOpenAI</a> 插件包。</p>
+
+<p>现在我们可以通过 <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/request/1346299-01c38741-987b-42af-850d-1b1e21b506df">智能体更新</a> API 更新聊天机器人的提示。</p>
+
+<p><img src="/botsharp-doc/zh/guide/agent/assets/agent-update.png" alt="Alt text" /></p>
+
+<p>更新成功后，机器人将拥有系统提示，后续对话将基于系统提示的背景知识与用户互动。到目前为止，智能体的创建已经完成，但真正的对话尚未开始。接下来将继续介绍最后一步，<a href="/botsharp-doc/zh/guide/conversation/intro.html">智能体对话</a> 部分。</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/agent/intro.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

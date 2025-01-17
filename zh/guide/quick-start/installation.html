@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>安装 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="安装" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/quick-start/installation.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/quick-start/installation.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="安装" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"安装","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/quick-start/installation.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="安装">安装</h1>
+
+<p>BotSharp 严格遵循模块化设计原则，采用视图和逻辑分离的结构。它还提供了完整的 Web API 接口，以便与您自己的系统集成。在架构层面，Hook 和 Event 被设计用于不同的目的，可以在不更改内核的情况下扩展 Chatbot 的对话能力。</p>
+
+<h2 id="在开发模式下本地运行">在开发模式下本地运行</h2>
+
+<p>如果您是 .NET 开发人员并希望开发扩展或修复 BotSharp 的错误，您可以按 F5 在调试模式下本地运行它。
+确保安装 <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0">Microsoft .NET SDK</a> 6.0+ 构建环境
+使用 dotnet CLI 构建解决方案（首选）。</p>
+
+<h3 id="克隆源代码并构建">克隆源代码并构建</h3>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">git</span><span class="w"> </span><span class="nx">clone</span><span class="w"> </span><span class="nx">https://github.com/SciSharp/BotSharp</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">cd</span><span class="w"> </span><span class="nx">BotSharp</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">dotnet</span><span class="w"> </span><span class="nx">build</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="更新配置">更新配置</h3>
+<p><code class="language-plaintext highlighter-rouge">BotSharp</code> 可以与多个 LLM 提供商一起工作。在您的项目中更新 <code class="language-plaintext highlighter-rouge">appsettings.json</code>。以下配置是将 Azure OpenAI 作为 LLM 后端</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"LlmProviders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-openai"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Models"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-35-turbo"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ApiKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gpt-35-turbo.openai.azure.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"PromptCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0015</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"CompletionCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-35-turbo-instruct"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ApiKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gpt-35-turbo-instruct.openai.azure.com/"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"PromptCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0015</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"CompletionCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="运行后端-web-项目">运行后端 Web 项目</h3>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">dotnet</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nt">--project</span><span class="w"> </span><span class="nx">src/WebStarter</span><span class="w">
+</span></code></pre></div></div>
+<p><img src="assets/BackendServiceHomeScreenshot.png" alt="alt text" title="Title" /></p>
+
+<h3 id="打开-rest-apis">打开 REST APIs</h3>
+<p>您可以通过浏览器访问 http://localhost:5500/swagger 中的 API
+<img src="assets/APIHome.png" alt="alt text" title="Title" /></p>
+
+<h3 id="使用-postman-测试">使用 Postman 测试</h3>
+<p>我们公开分享了 <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/overview">Postman</a> 的 API 集合，方便开发人员快速开发。
+<img src="assets/APIPostman.png" alt="alt text" title="Title" /></p>
+
+<p>到目前为止，您已经设置了 Bot 的运行和开发环境，但实际上还不能测试 Chatbot。下一步是关于如何 <a href="../agent/account">创建代理</a> 并开始与 Chatbot 对话。</p>
+
+<p><strong>如果您只打算使用 REST API 与您的机器人交互，请忽略以下部分。</strong></p>
+
+<h3 id="启动-botsharp-ui可选">启动 BotSharp UI（可选）</h3>
+<p>BotSharp 有一个官方前端项目，可与后端配合使用。该项目的主要功能是允许开发人员可视化后端的各种配置。</p>
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">git</span><span class="w"> </span><span class="nx">clone</span><span class="w"> </span><span class="nx">https://github.com/SciSharp/BotSharp-UI</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">cd</span><span class="w"> </span><span class="nx">BotSharp-UI</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">npm</span><span class="w"> </span><span class="nx">install</span><span class="w">
+</span><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">npm</span><span class="w"> </span><span class="nx">run</span><span class="w"> </span><span class="nx">dev</span><span class="w">
+</span></code></pre></div></div>
+
+<p>在 <code class="language-plaintext highlighter-rouge">.env</code> 中更新 API URL 为您的本地 BotSharp 后端服务。</p>
+<div class="language-config highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PUBLIC_SERVICE_URL</span>=<span class="n">http</span>://<span class="n">localhost</span>:<span class="m">5500</span>
+<span class="n">PUBLIC_LIVECHAT_HOST</span>=<span class="n">http</span>://<span class="n">localhost</span>:<span class="m">5015</span>
+</code></pre></div></div>
+
+<p>在浏览器中访问 http://localhost:5015 并享受与 BotSharp 的 Chatbot 互动。</p>
+
+<p><img src="/botsharp-doc/zh/guide/quick-start/assets/BotSharp-UI-Router.png" alt="BotSharp UI Router" /></p>
+
+<h2 id="在-nuget-中安装">在 NuGet 中安装</h2>
+<p>如果您不想使用源代码来体验此框架，您也可以直接安装 BotSharp 发布的 <a href="https://www.nuget.org/packages?q=BotSharp">NuGet 包</a>，并根据项目需求安装不同的功能包。在安装之前，请仔细阅读文档以了解不同模块可以提供的功能。</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">PS</span><span class="w"> </span><span class="nx">D:\</span><span class="err">&gt;</span><span class="w"> </span><span class="nx">Install-Package</span><span class="w"> </span><span class="nx">BotSharp.Core</span><span class="w">
+</span></code></pre></div></div>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/quick-start/installation.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

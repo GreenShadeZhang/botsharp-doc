@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Agent Utility | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Agent Utility" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/agent-utility.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/agent-utility.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Agent Utility" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Agent Utility","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/agent-utility.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="agent-utility">Agent Utility</h1>
+
+<h2 id="introduction">Introduction</h2>
+<p>This document aims to introduce the agent utility concept and provide an instruction on adding custom agent utilities in AI project “BotSharp”. We will start by explaining the mechanism of agent utility in <a href="#agent-utility">Section 2</a>. Then, we illustrate the custom agent utility setup and integration in <a href="#agent-utility-setup">Section 3</a> and <a href="#agent-utility-integration">Section 4</a>, respectively. A use case will be demonstrated in <a href="#use-case-demo">Section 5</a>. We wrap up the document with a short summary.</p>
+
+<h2 id="agent-utility-1">Agent Utility</h2>
+<p>The agent utility is a unique feature that can be integrated into agent to enhance its capability. Its core principle is that it can dynamically and seamlessly add extra prompts and add task-oriented functions (or tools) during conversation, without disrupting the agent’s primary purpose. In other words, the agent utility can perform extra tasks based on the context of conversation. Typical examples of agent utility include reading images/pdf, generating image, and sending http requests. <a href="#agent-utility-example">Fig 2.1.1</a> demonstrates an example of these utilities. In this example, “Chatbot” is a simple agent to answer user questions, and the utilities extend its capability to explain image content, generate requested image, and send a specific http request.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/agent-utility-example.png" alt="ex" />
+<br /></p>
+
+<h2 id="agent-utility-setup">Agent Utility Setup</h2>
+<p>In this section, we outline the steps to set up a custom agent utility. We start with the basic code structure and then add essential utility data, such as prompts and functions. The utility hooks are used to incorporate the utility into the agent. Finally, we give a brief overview of the utility implementation.</p>
+
+<h3 id="basic-code-structure">Basic Code Structure</h3>
+<p>The basic code structure of a typical agent utility includes prompt/function data, hooks, and function implementation. We can add specific utility prompts and functions in different projects. Note that the agent <strong>“6745151e-6d46-4a02-8de4-1c4f21c7da95”</strong> is considered as a dedicated utility assistant, and every prompt and function can be optionally used as a utility. <a href="#agent-utility-code-structure">Fig 3.1.1</a> presents the structure of prompt, function, hooks, and implementation of an http utility.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/agent-utility-code-structure.png" alt="code" />
+<br /></p>
+
+<h3 id="utility-data">Utility Data</h3>
+<p>For a typical agent utility, it is essential to add at least one prompt and one function. The utility name is formatted as <strong>“[plugin name].[utility name]”</strong>, such as “http.http-handler”. The prompt is added under the “templates” folder and its recommended name is <strong>“util-[plugin name]-[function name].fn.liquid”</strong>, while the function is added under the “functions” folder and its recommended name is <strong>“util-[plugin name]-[function name].json”</strong>. Once we compile the project, we can find the aggregated utility assistant folder at location: <strong>“\BotSharp\src\WebStarter\bin\Debug\net8.0\data\agents\6745151e-6d46-4a02-8de4-1c4f21c7da95”</strong>.</p>
+
+<h3 id="utility-hooks">Utility Hooks</h3>
+<p>The utility hooks are used to connect the agent utility to the agent system. The code snippet below demonstrates an implementation of the http utility hook, where we define the utility name, prompts and functions. Note that each utility can be used across different agents.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HttpHandlerPlugin</span> <span class="p">:</span> <span class="n">IBotSharpPlugin</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Id</span> <span class="p">=&gt;</span> <span class="s">"2c1eb1c4-16e5-4c65-8ee4-032324c26b81"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"HTTP Handler"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">=&gt;</span> <span class="s">"Empower agent to handle HTTP request in RESTful API or GraphQL"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">IconUrl</span> <span class="p">=&gt;</span> <span class="s">"https://lirp.cdn-website.com/6f8d6d8a/dms3rep/multi/opt/API_Icon-640w.png"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">AgentIds</span> <span class="p">=&gt;</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"87c458fc-ec5f-40ae-8ed6-05dda8a07523"</span> <span class="p">};</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">RegisterDI</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">,</span> <span class="n">IConfiguration</span> <span class="n">config</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">services</span><span class="p">.</span><span class="nf">AddScoped</span><span class="p">(</span><span class="n">provider</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">settingService</span> <span class="p">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">ISettingService</span><span class="p">&gt;();</span>
+            <span class="k">return</span> <span class="n">settingService</span><span class="p">.</span><span class="n">Bind</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;(</span><span class="s">"HttpHandler"</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IAgentUtilityHook</span><span class="p">,</span> <span class="n">HttpHandlerUtilityHook</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The agent hook is used to append the utility prompt and function during the conversation. <strong>Note that the utility data is only allowed to be included in the context of conversation</strong>. The utility mechanism is implemented in the <strong>“OnAgentUtilityLoaded”</strong> hook, and it is invoked when we load any agent.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">Agent</span><span class="p">&gt;</span> <span class="nf">LoadAgent</span><span class="p">(</span><span class="kt">string</span> <span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="p">||</span> <span class="n">id</span> <span class="p">==</span> <span class="n">Guid</span><span class="p">.</span><span class="n">Empty</span><span class="p">.</span><span class="nf">ToString</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">var</span> <span class="n">hooks</span> <span class="p">=</span> <span class="n">_services</span><span class="p">.</span><span class="n">GetServices</span><span class="p">&lt;</span><span class="n">IAgentHook</span><span class="p">&gt;();</span>
+
+    <span class="c1">// Before agent is loaded.</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">hook</span> <span class="k">in</span> <span class="n">hooks</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span> <span class="p">!=</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">hook</span><span class="p">.</span><span class="nf">OnAgentLoading</span><span class="p">(</span><span class="k">ref</span> <span class="n">id</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">var</span> <span class="n">agent</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">GetAgent</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">agent</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">await</span> <span class="nf">InheritAgent</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+    <span class="nf">OverrideInstructionByChannel</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+    <span class="nf">AddOrUpdateParameters</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+
+    <span class="c1">// Populate state into dictionary</span>
+    <span class="n">agent</span><span class="p">.</span><span class="n">TemplateDict</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;();</span>
+    <span class="nf">PopulateState</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">TemplateDict</span><span class="p">);</span>
+
+    <span class="c1">// After agent is loaded</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">hook</span> <span class="k">in</span> <span class="n">hooks</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span> <span class="p">!=</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">hook</span><span class="p">.</span><span class="nf">SetAget</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Instruction</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">hook</span><span class="p">.</span><span class="nf">OnInstructionLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Instruction</span><span class="p">,</span> <span class="n">agent</span><span class="p">.</span><span class="n">TemplateDict</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Functions</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">hook</span><span class="p">.</span><span class="nf">OnFunctionsLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Functions</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Samples</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">hook</span><span class="p">.</span><span class="nf">OnSamplesLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Samples</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">hook</span><span class="p">.</span><span class="nf">OnAgentUtilityLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+        <span class="n">hook</span><span class="p">.</span><span class="nf">OnAgentLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">_logger</span><span class="p">.</span><span class="nf">LogInformation</span><span class="p">(</span><span class="s">$"Loaded agent </span><span class="p">{</span><span class="n">agent</span><span class="p">}</span><span class="s">."</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">agent</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="utility-function-implementation">Utility Function Implementation</h3>
+<p>Here we introduce a simple utility function implementation. The actual content depends on what task you want this utility to fulfill. The code snippet below illustrates the implementation of the “handle http request” function. Note that the property “Name” must be consistent with the function added in the utility data. The “Indication” is an optional property whose content will be displayed in the chat while the user is waiting for the assistant response.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HandleHttpRequestFn</span> <span class="p">:</span> <span class="n">IFunctionCallback</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"util-http-handle_http_request"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Indication</span> <span class="p">=&gt;</span> <span class="s">"Handling http request"</span><span class="p">;</span>
+
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IServiceProvider</span> <span class="n">_services</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">HandleHttpRequestFn</span><span class="p">&gt;</span> <span class="n">_logger</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IHttpClientFactory</span> <span class="n">_httpClientFactory</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IHttpContextAccessor</span> <span class="n">_context</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">BotSharpOptions</span> <span class="n">_options</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">HandleHttpRequestFn</span><span class="p">(</span><span class="n">IServiceProvider</span> <span class="n">services</span><span class="p">,</span>
+        <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">HandleHttpRequestFn</span><span class="p">&gt;</span> <span class="n">logger</span><span class="p">,</span>
+        <span class="n">IHttpClientFactory</span> <span class="n">httpClientFactory</span><span class="p">,</span>
+        <span class="n">IHttpContextAccessor</span> <span class="n">context</span><span class="p">,</span>
+        <span class="n">BotSharpOptions</span> <span class="n">options</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_services</span> <span class="p">=</span> <span class="n">services</span><span class="p">;</span>
+        <span class="n">_logger</span> <span class="p">=</span> <span class="n">logger</span><span class="p">;</span>
+        <span class="n">_httpClientFactory</span> <span class="p">=</span> <span class="n">httpClientFactory</span><span class="p">;</span>
+        <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="n">_options</span> <span class="p">=</span> <span class="n">options</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;</span> <span class="nf">Execute</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">args</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">LlmContextIn</span><span class="p">&gt;(</span><span class="n">message</span><span class="p">.</span><span class="n">FunctionArgs</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">url</span> <span class="p">=</span> <span class="n">args</span><span class="p">?.</span><span class="n">RequestUrl</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">method</span> <span class="p">=</span> <span class="n">args</span><span class="p">?.</span><span class="n">HttpMethod</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">content</span> <span class="p">=</span> <span class="n">args</span><span class="p">?.</span><span class="n">RequestContent</span><span class="p">;</span>
+
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">SendHttpRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">responseContent</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">HandleHttpResponse</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+            <span class="n">message</span><span class="p">.</span><span class="n">Content</span> <span class="p">=</span> <span class="n">responseContent</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">msg</span> <span class="p">=</span> <span class="s">$"Fail when sending http request. Url: </span><span class="p">{</span><span class="n">url</span><span class="p">}</span><span class="s">, method: </span><span class="p">{</span><span class="n">method</span><span class="p">}</span><span class="s">, content: </span><span class="p">{</span><span class="n">content</span><span class="p">}</span><span class="s">"</span><span class="p">;</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">msg</span><span class="p">}</span><span class="s">\n(Error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s">)"</span><span class="p">);</span>
+            <span class="n">message</span><span class="p">.</span><span class="n">Content</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">HttpResponseMessage</span><span class="p">?&gt;</span> <span class="nf">SendHttpRequest</span><span class="p">(</span><span class="kt">string</span><span class="p">?</span> <span class="n">url</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">method</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">url</span><span class="p">))</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">client</span> <span class="p">=</span> <span class="n">_httpClientFactory</span><span class="p">.</span><span class="nf">CreateClient</span><span class="p">();</span>
+        <span class="nf">AddRequestHeaders</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="p">=</span> <span class="nf">BuildHttpRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">SendAsync</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="p">==</span> <span class="k">null</span> <span class="p">||</span> <span class="p">!</span><span class="n">response</span><span class="p">.</span><span class="n">IsSuccessStatusCode</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"Response status code: </span><span class="p">{</span><span class="n">response</span><span class="p">?.</span><span class="n">StatusCode</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">AddRequestHeaders</span><span class="p">(</span><span class="n">HttpClient</span> <span class="n">client</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span> <span class="s">$"</span><span class="p">{</span><span class="n">_context</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]}</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">settings</span> <span class="p">=</span> <span class="n">_services</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;();</span>
+        <span class="kt">var</span> <span class="n">origin</span> <span class="p">=</span> <span class="p">!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">settings</span><span class="p">.</span><span class="n">Origin</span><span class="p">)</span> <span class="p">?</span> <span class="n">settings</span><span class="p">.</span><span class="n">Origin</span> <span class="p">:</span> <span class="s">$"</span><span class="p">{</span><span class="n">_context</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"Origin"</span><span class="p">]}</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">origin</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"Origin"</span><span class="p">,</span> <span class="n">origin</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="p">(</span><span class="n">Uri</span><span class="p">,</span> <span class="n">HttpRequestMessage</span><span class="p">)</span> <span class="nf">BuildHttpRequest</span><span class="p">(</span><span class="kt">string</span> <span class="n">url</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">method</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">httpMethod</span> <span class="p">=</span> <span class="nf">GetHttpMethod</span><span class="p">(</span><span class="n">method</span><span class="p">);</span>
+        <span class="n">StringContent</span> <span class="n">httpContent</span><span class="p">;</span>
+
+        <span class="kt">var</span> <span class="n">requestUrl</span> <span class="p">=</span> <span class="n">url</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">httpMethod</span> <span class="p">==</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Get</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">httpContent</span> <span class="p">=</span> <span class="nf">BuildHttpContent</span><span class="p">(</span><span class="s">"{}"</span><span class="p">);</span>
+            <span class="n">requestUrl</span> <span class="p">=</span> <span class="nf">BuildQuery</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">httpContent</span> <span class="p">=</span> <span class="nf">BuildHttpContent</span><span class="p">(</span><span class="n">content</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(!</span><span class="n">Uri</span><span class="p">.</span><span class="nf">TryCreate</span><span class="p">(</span><span class="n">requestUrl</span><span class="p">,</span> <span class="n">UriKind</span><span class="p">.</span><span class="n">Absolute</span><span class="p">,</span> <span class="k">out</span> <span class="kt">var</span> <span class="n">uri</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">settings</span> <span class="p">=</span> <span class="n">_services</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;();</span>
+            <span class="kt">var</span> <span class="n">baseUri</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Uri</span><span class="p">(</span><span class="n">settings</span><span class="p">.</span><span class="n">BaseAddress</span><span class="p">);</span>
+            <span class="n">uri</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Uri</span><span class="p">(</span><span class="n">baseUri</span><span class="p">,</span> <span class="n">requestUrl</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="k">new</span> <span class="n">HttpRequestMessage</span>
+        <span class="p">{</span>
+            <span class="n">RequestUri</span> <span class="p">=</span> <span class="n">uri</span><span class="p">,</span>
+            <span class="n">Method</span> <span class="p">=</span> <span class="n">httpMethod</span><span class="p">,</span>
+            <span class="n">Content</span> <span class="p">=</span> <span class="n">httpContent</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">HttpMethod</span> <span class="nf">GetHttpMethod</span><span class="p">(</span><span class="kt">string</span><span class="p">?</span> <span class="n">method</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">localMethod</span> <span class="p">=</span> <span class="n">method</span><span class="p">?.</span><span class="nf">Trim</span><span class="p">()?.</span><span class="nf">ToUpper</span><span class="p">();</span>
+        <span class="n">HttpMethod</span> <span class="n">matchMethod</span><span class="p">;</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">localMethod</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">case</span> <span class="s">"GET"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Get</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="s">"DELETE"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Delete</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="s">"PUT"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Put</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="s">"Patch"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Patch</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Post</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">matchMethod</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">StringContent</span> <span class="nf">BuildHttpContent</span><span class="p">(</span><span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">str</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">JsonDocument</span><span class="p">&gt;(</span><span class="n">content</span> <span class="p">??</span> <span class="s">"{}"</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+            <span class="n">str</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="nf">Serialize</span><span class="p">(</span><span class="n">json</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"Error when build http content: </span><span class="p">{</span><span class="n">content</span><span class="p">}</span><span class="s">\n(Error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s">)"</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">StringContent</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">,</span> <span class="n">MediaTypeNames</span><span class="p">.</span><span class="n">Application</span><span class="p">.</span><span class="n">Json</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">string</span> <span class="nf">BuildQuery</span><span class="p">(</span><span class="kt">string</span> <span class="n">url</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="p">||</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">content</span><span class="p">))</span> <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
+
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">queries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;();</span>
+            <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">JsonDocument</span><span class="p">&gt;(</span><span class="n">content</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">root</span> <span class="p">=</span> <span class="n">json</span><span class="p">.</span><span class="n">RootElement</span><span class="p">;</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">prop</span> <span class="k">in</span> <span class="n">root</span><span class="p">.</span><span class="nf">EnumerateObject</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">name</span> <span class="p">=</span> <span class="n">prop</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="nf">Trim</span><span class="p">();</span>
+                <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">prop</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="nf">ToString</span><span class="p">().</span><span class="nf">Trim</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">||</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="k">value</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="k">continue</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="n">queries</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">name</span><span class="p">}</span><span class="s">=</span><span class="p">{</span><span class="k">value</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(!</span><span class="n">queries</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="n">url</span> <span class="p">+=</span> <span class="s">$"?</span><span class="p">{</span><span class="kt">string</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="sc">'&amp;'</span><span class="p">,</span> <span class="n">queries</span><span class="p">)}</span><span class="s">"</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"Error when building url query. Url: </span><span class="p">{</span><span class="n">url</span><span class="p">}</span><span class="s">, Content: </span><span class="p">{</span><span class="n">content</span><span class="p">}</span><span class="s">\n(Error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s">)"</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="nf">HandleHttpResponse</span><span class="p">(</span><span class="n">HttpResponseMessage</span><span class="p">?</span> <span class="n">response</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="utility-inheritance">Utility Inheritance</h3>
+<p>Here we introduce a new feature: utility inheritance. As we are using the routing-based multi-agent architecture, different agents may come into the call stack while we are handling user requests. With the utility inheritance, the agent can not only use the utilities added to itself but also inherit the utilities from the entry agent, which is the first agent that comes into the call stack, such as a router agent. <a href="#routing-architecture">Fig 3.5.1</a> illustrates a typical example of routing-based multi-agent architecture, where “Pizza Bot” is the router and “Order Inquery”, “Ordering”, “Payment” are task agents. When the user starts chatting, “Pizza Bot” first comes into the call stack, with “Order Inquery”, “Ordering”, or “Payment” joining next depending on what the user actually requests. For example, if we allow “Order Inquery” to inherit utilities, all the utilities from itself as well as “Pizza Bot” will be invoked once the “Order Inquery” agent is in action.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/routing-arch.png" alt="routing-arch" />
+<br /></p>
+
+<h3 id="agent-setup">Agent Setup</h3>
+<p>Here we introduce the agent setup with utilities and inheritance. As we introduced in <a href="#utility-hooks">Section 3.3</a>, each utility of an agent is structured with utility name, functions, and prompts. <a href="#router-utility-ui">Fig 3.6.1</a> and <a href="#task-agent-utility-ui">Fig 3.6.2</a> presents the utility configuration and utility inheritance of “Pizza Bot” and “Order Inquery”, respectively. As is displayed, we can apply the utility configuration and inheritance via agent files or agent detail ui. Note that we can uncheck the box to disable a utility (<a href="#router-utility-ui">Fig 3.6.2</a>).</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8970b1e5-d260-4e2c-90b1-f1415a257c18"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pizza Bot"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AI assistant that can help customer place pizza order."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"routing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"inheritAgentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01fcc3e5-9af7-49e6-ad7a-a760bd12dc4a"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"createdDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T10:39:32.2349685Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"updatedDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T14:39:32.2349686Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"iconUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://cdn-icons-png.flaticon.com/512/6978/6978255.png"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"profiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"pizza"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"utilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http.http-handler"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"functions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"util-http-handle_http_request"</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"templates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"util-http-handle_http_request.fn"</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"routingRules"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reasoner"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NaiveReasoner"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p><br /></p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/router-utility-ui.png" alt="router-utility-ui" />
+<br />
+<br />
+<br /></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Order Inquiry"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Check the order status like payment, delivery or baking."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"createdDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T14:39:32.2349685Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"updatedDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T14:39:32.2349686Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b284db86-e9c2-4c25-a59e-4649797dd130"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"mergeUtility"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"profiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"pizza"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p><br /></p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/task-agent-utility-ui.png" alt="task-agent-utility-ui" />
+<br /></p>
+
+<h2 id="agent-utility-integration">Agent Utility Integration</h2>
+<p>In this section, we outline the steps to integrate a custom agent utility, including registering plugin, registering assembly, and adding project reference.</p>
+
+<p>The code snippet below presents the “Http Handler Plugin” in the “BotSharp.Plugin.HttpHandler”, where we can register the hooks and other essential settings. Note that there is no need to register the function here, since it is automatically registered on the application level.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HttpHandlerPlugin</span> <span class="p">:</span> <span class="n">IBotSharpPlugin</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Id</span> <span class="p">=&gt;</span> <span class="s">"2c1eb1c4-16e5-4c65-8ee4-032324c26b81"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"HTTP Handler"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">=&gt;</span> <span class="s">"Empower agent to handle HTTP request in RESTful API or GraphQL"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">IconUrl</span> <span class="p">=&gt;</span> <span class="s">"https://lirp.cdn-website.com/6f8d6d8a/dms3rep/multi/opt/API_Icon-640w.png"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">AgentIds</span> <span class="p">=&gt;</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"87c458fc-ec5f-40ae-8ed6-05dda8a07523"</span> <span class="p">};</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">RegisterDI</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">,</span> <span class="n">IConfiguration</span> <span class="n">config</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">services</span><span class="p">.</span><span class="nf">AddScoped</span><span class="p">(</span><span class="n">provider</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">settingService</span> <span class="p">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">ISettingService</span><span class="p">&gt;();</span>
+            <span class="k">return</span> <span class="n">settingService</span><span class="p">.</span><span class="n">Bind</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;(</span><span class="s">"HttpHandler"</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IAgentUtilityHook</span><span class="p">,</span> <span class="n">HttpHandlerUtilityHook</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="#register-assembly">Fig 4.1.1</a> demonstrates the utility assembly registration in “appsettings.json”. It is important to note that we are required to add the project reference to the Startup project, e.g., WebStarter. Moreover, we are required to add any new custom agent utility in the “Plugin” folder instead of the “BotSharp” folder.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/register-assembly.png" alt="register-assembly" />
+<br /></p>
+
+<h2 id="use-case-demo">Use Case Demo</h2>
+<p>In this section, we demonstrate an http utility. After we set up and integrate the custom agent utility in backend, we can start the BotSharp-UI and go to any specific agent. <a href="#add-utility">Fig 5.1.1</a> shows an example of the “Chatbot” agent, where we can add any registered utilities in the highlight section.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/add-utility.png" alt="add-utility" />
+<br /></p>
+
+<p>Once we add the utility, we can initialize a conversation by clicking the bot icon at the top left corner. <a href="#chat-window-demo">Fig 5.1.2</a> shows the conversation window, where we can find the number of utilities at the left panel. We can also click the agent name to go back to the agent page.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/chat-window-demo.png" alt="chat-window-demo" />
+<br /></p>
+
+<p>Here we use dummy rest APIs (source: https://dummy.restapiexample.com/) for the demo purpose. <a href="#dummy-http">Fig 5.1.3</a> displays the various http requests sent in the conversation with “Chatbot”. We can see that the “Http Handler” utility has successfully extends the agent to send http request and receive response.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/agent-utility/dummy-http.png" alt="dummy-http" />
+<br /></p>
+
+<h2 id="summary">Summary</h2>
+<p>In this document, we introduce the agent utility concept and provide a step-by-step instruction on adding custom agent utilities in AI project “BotSharp”.</p>
+
+<p>The agent utility is designed for enhancing the agent capability to perform dedicated tasks, such as sending http request, reading images, and generating images, by adding extra prompts and functions.</p>
+
+<p>The agent utility setup and integration are explained step by step in <a href="#agent-utility-setup">Section 3</a> and <a href="#agent-utility-integration">Section 4</a>, respectively.</p>
+
+<p>We end up the document by demonstrating the Http utility, where we prove the utility can handle various http requests in the chat with agents.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/architecture/agent-utility.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

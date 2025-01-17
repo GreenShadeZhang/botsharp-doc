@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>消息组件 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="消息组件" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/channels/components.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/channels/components.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="消息组件" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"消息组件","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/channels/components.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="消息组件">消息组件</h1>
+
+<p>在构建 AI 聊天机器人时，对话不仅仅是简单的文本消息。除了文本，<code class="language-plaintext highlighter-rouge">BotSharp</code> 还允许您发送丰富的媒体，如音频、视频和图像，并提供一组结构化的消息选项，如消息模板、快速回复、按钮等。UI 渲染程序可以根据返回的数据格式渲染组件。</p>
+
+<h2 id="文本消息">文本消息</h2>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"messaging_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RESPONSE"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="s2">"Hello, world!"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="快速回复">快速回复</h2>
+
+<p><code class="language-plaintext highlighter-rouge">content_type</code>: 文本、电话号码和电子邮件</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"messaging_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RESPONSE"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"选择一个颜色:"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"quick_replies"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"content_type"</span><span class="p">:</span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"红色"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="s2">"&lt;POSTBACK_PAYLOAD&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="s2">"http://example.com/img/red.png"</span><span class="w">
+        </span><span class="p">},{</span><span class="w">
+            </span><span class="nl">"content_type"</span><span class="p">:</span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"绿色"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="s2">"&lt;POSTBACK_PAYLOAD&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="s2">"http://example.com/img/green.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="发送者动作">发送者动作</h2>
+
+<p>在创建聊天机器人时，设定用户期望是至关重要的。发送者动作是一个关键工具，允许您控制打字和已读回执指示。例如，您可以使用它们来显示消息已被查看或正在输入响应，让用户在互动过程中保持知情。</p>
+
+<p><code class="language-plaintext highlighter-rouge">sender_action</code>: mark_seen, typing_on 和 typing_off</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"sender_action"</span><span class="p">:</span><span class="s2">"typing_on"</span><span class="w">
+</span><span class="p">}</span><span class="w">  
+</span></code></pre></div></div>
+<h2 id="消息模板">消息模板</h2>
+
+<p>消息模板是用于在对话中以整洁的方式呈现复杂信息的结构化消息格式，防止文本混乱。这些模板还包括按钮以增强互动性。它提供了一种比标准文本消息更丰富的对话体验，通过在单条消息中集成按钮、图像、列表等。模板可以用于多种目的，例如显示产品信息、要求消息接收者从预定选项中选择以及显示搜索结果。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"attachment"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"template"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"payload"</span><span class="p">:{</span><span class="w">
+            </span><span class="nl">"template_type"</span><span class="p">:</span><span class="s2">"TEMPLATE-TYPE"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"elements"</span><span class="p">:[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"TEMPLATE-TITLE"</span><span class="p">,</span><span class="w">
+                    </span><span class="err">...</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="按钮模板">按钮模板</h3>
+
+<p>按钮模板发送带有最多三个附加按钮的文本消息。此模板适用于为消息接收者提供选择，例如对问题的预定响应或采取的行动。</p>
+
+<p><code class="language-plaintext highlighter-rouge">type</code>: web_url, postback, phone_number, account_link（登录）, account_unlink（登出）</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"template_type"</span><span class="p">:</span><span class="s2">"button"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"text"</span><span class="p">:</span><span class="s2">"接下来你想做什么？"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"buttons"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="s2">"https://www.github.com"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"访问 Github"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"postback"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"访问 Github"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;STRING_SENT_TO_WEBHOOK&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"phone_number"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"&lt;BUTTON_TEXT&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="s2">"&lt;PHONE_NUMBER&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"account_link"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;YOUR_LOGIN_URL&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"account_unlink"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="通用模板">通用模板</h3>
+
+<p>通用模板是一种简单的结构化消息，包括标题、副标题、图像和最多三个按钮。您还可以指定一个 <code class="language-plaintext highlighter-rouge">default_action</code> 对象，当点击模板时，该对象会设置一个将在聊天网页视图中打开的 URL。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"template_type"</span><span class="p">:</span><span class="s2">"generic"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"elements"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"欢迎！"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="s2">"https://raw.githubusercontent.com/fbsamples/original-coast-clothing/main/public/styles/male-work.jpg"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"subtitle"</span><span class="p">:</span><span class="s2">"我们有适合每个人的帽子。"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"default_action"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.originalcoastclothing.com/"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"webview_height_ratio"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tall"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"buttons"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"url"</span><span class="p">:</span><span class="s2">"https://www.originalcoastclothing.com/"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"查看网站"</span><span class="w">
+            </span><span class="p">}</span><span class="w">             
+          </span><span class="p">]</span><span class="w">      
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="表单模板">表单模板</h3>
+
+<p>表单模板用于从用户端收集信息，UI 允许用户填写结构化表单。</p>
+
+<h3 id="客户反馈模板">客户反馈模板</h3>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/channels/components.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

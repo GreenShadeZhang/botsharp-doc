@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Routing | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Routing" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/routing.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/routing.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Routing" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Routing","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/architecture/routing.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="routing">Routing</h1>
+
+<p>Routing is an important function that allows multiple Agents to work together to complete enterprise-level tasks. When you apply LLM to your business system, it is inevitable to develop agents with different functions. How to effectively manage so many agents with different responsibilities is a challenging task. From an engineering perspective, each Different teams are responsible for the development of different Agents, and the teams will face the problem of mutual isolation between Agents. The ideal situation is that they can be developed independently but cooperate with each other.</p>
+
+<h2 id="router">Router</h2>
+
+<p>The Routing feature is the core technology used by BotSharp to manage multiple Agents. BotSharp has a built-in intelligent Agent called <code class="language-plaintext highlighter-rouge">Router</code>. When you enable this function, all user requests will be pre-processed by the Router to determine which Agent to distribute the request to for processing. The advantage of Routing technology is that it can isolate different Agents and allow them to work together to achieve the user’s goals. The adoption of <code class="language-plaintext highlighter-rouge">Routing</code> ensures that Agent can be scalable, flexible and robust enough in enterprise applications.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/routing-redirection.png" alt="routing with reasoning" /></p>
+
+<h2 id="reasoner">Reasoner</h2>
+
+<p>For simple questions raised by users, the ordinary routing function can already handle it. However, for the scenario where the user has a long description and needs to disassemble the task, ordinary routing cannot handle it. At this time, the <code class="language-plaintext highlighter-rouge">Reasoning</code> feature needs to be turned on, and LLM will respond according to the problem. The complexity is broken down into different small tasks. These small tasks can be processed by the corresponding Agent. During the processing process, the Router will constantly adjust the next step plan to deal with the different results returned by the Agent.</p>
+
+<p><img src="/botsharp-doc/en/guide/architecture/assets/routing-reasoner.png" alt="routing with reasoning" /></p>
+
+<p>For more <strong>Routing</strong> related information, please go to <a href="/botsharp-doc/en/guide/agent/router.html">Agent Routing</a>.</p>
+
+<h2 id="profile">Profile</h2>
+
+<p>There is an array field called <code class="language-plaintext highlighter-rouge">Profile</code> in the Agent data model, which is used to store the current profiles. When this attribute is set in the <code class="language-plaintext highlighter-rouge">Router</code>, only matching Task Agents can be included in the routing candidate Agents list, which means that the Task Agent also To set the same profile name. Profiles allows you to enter multiple profiles, and the system will automatically combine them for processing.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/architecture/routing.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

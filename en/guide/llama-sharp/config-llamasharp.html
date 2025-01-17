@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Config LLamaSharp | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Config LLamaSharp" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/llama-sharp/config-llamasharp.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/llama-sharp/config-llamasharp.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Config LLamaSharp" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Config LLamaSharp","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/llama-sharp/config-llamasharp.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="config-llamasharp">Config LLamaSharp</h1>
+
+<p>BotSharp contains LLamaSharp plugin that allows you to run local llm models. To use the LLamaSharp, you need to config the BotSharp project with few steps.</p>
+
+<h2 id="install-llamasharp-backend">Install LLamaSharp Backend</h2>
+
+<p>Before use LLamaSharp plugin, you need to install one of the LLamaSharp backend services that suits your environment.</p>
+
+<ul>
+  <li><a href="https://www.nuget.org/packages/LLamaSharp.Backend.Cpu"><code class="language-plaintext highlighter-rouge">LLamaSharp.Backend.Cpu</code></a>: Pure CPU for Windows &amp; Linux. Metal for Mac.</li>
+  <li><a href="https://www.nuget.org/packages/LLamaSharp.Backend.Cuda11"><code class="language-plaintext highlighter-rouge">LLamaSharp.Backend.Cuda11</code></a>: CUDA 11 for Windows and Linux</li>
+  <li><a href="https://www.nuget.org/packages/LLamaSharp.Backend.Cuda12"><code class="language-plaintext highlighter-rouge">LLamaSharp.Backend.Cuda12</code></a>: CUDA 12 for Windows and Linux</li>
+</ul>
+
+<p><strong>Please install the same version of LLamaSharp Backend with the LLamaSharp in BotSharp.Plugin.LLamaSharp.csproj.</strong></p>
+
+<p><img src="/botsharp-doc/en/guide/llama-sharp/assets/check-llamasharp-version.png" alt="Check LLamaSharp Version" /></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># move to the LLamaSharp Plugin Project</span>
+<span class="nv">$ </span><span class="nb">cd </span>src/Plugins/BotSharp.Plugin.LLamaSharp
+<span class="c"># Install the LLamaSharp Backend</span>
+<span class="nv">$ </span>dotnet add package LLamaSharp.Backend.Cpu <span class="nt">--version</span> 0.9.1
+</code></pre></div></div>
+
+<h2 id="download-and-config-local-llm-models">Download and Config Local LLM Models</h2>
+
+<p>LLamaSharp supports many LLM Models like LLaMA and Alpaca. Download the <code class="language-plaintext highlighter-rouge">gguf</code> format models and save them in your machine.</p>
+
+<p>We will use a <a href="https://huggingface.co/TheBloke/llama-2-7B-Guanaco-QLoRA-GGUF">Llama 2</a> model in this tutorial.</p>
+
+<p>After downloading the model, open the <code class="language-plaintext highlighter-rouge">src/WebStarter/appsettings.json</code> file to config the LLamaSharp models. Set the <code class="language-plaintext highlighter-rouge">LlmProviders</code> and <code class="language-plaintext highlighter-rouge">LlamaSharp</code> fields to correct settings as your computer. For example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="err">...</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"LlmProviders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">...</span><span class="p">,</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-sharp"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Models"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-2-7b.Q2_K.gguf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="err">...</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"LlamaSharp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Interactive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ModelDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/wenwei/Desktop/LLM"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"DefaultModel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-2-7b.Q2_K.gguf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"MaxContextLength"</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"NumberOfGpuLayer"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>For more details about LLamaSharp, visit <a href="https://github.com/SciSharp/LLamaSharp">LLamaSharp - GitHub</a>.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/llama-sharp/config-llamasharp.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

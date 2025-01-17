@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>智能体实用工具 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="智能体实用工具" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/architecture/agent-utility.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/architecture/agent-utility.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="智能体实用工具" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"智能体实用工具","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/architecture/agent-utility.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="智能体实用工具">智能体实用工具</h1>
+
+<h2 id="介绍">介绍</h2>
+<p>本文档旨在介绍智能体实用工具的概念，并提供在 AI 项目 “BotSharp” 中添加自定义智能体实用工具的说明。我们将首先在<a href="#agent-utility">第 2 节</a>解释智能体实用工具的机制。然后，我们将在<a href="#agent-utility-setup">第 3 节</a>和<a href="#agent-utility-integration">第 4 节</a>中分别说明自定义智能体实用工具的设置和集成。最后在<a href="#use-case-demo">第 5 节</a>中展示一个用例，并以简短的总结结束本文档。</p>
+
+<h2 id="智能体实用工具-1">智能体实用工具</h2>
+<p>智能体实用工具是一种独特的功能，可以集成到智能体中以增强其能力。其核心原理是它可以在对话过程中动态且无缝地添加额外的提示和任务导向的功能（或工具），而不会干扰智能体的主要目的。换句话说，智能体实用工具可以根据对话的上下文执行额外的任务。智能体实用工具的典型例子包括读取图像/PDF、生成图像和发送 HTTP 请求。<a href="#agent-utility-example">图 2.1.1</a> 展示了这些实用工具的一个例子。在这个例子中，“Chatbot” 是一个简单的回答用户问题的智能体，而这些实用工具扩展了其解释图像内容、生成请求图像和发送特定 HTTP 请求的能力。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/agent-utility-example.png" alt="ex" />
+<br /></p>
+
+<h2 id="智能体实用工具设置">智能体实用工具设置</h2>
+<p>在本节中，我们概述了设置自定义智能体实用工具的步骤。我们从基本代码结构开始，然后添加必要的实用工具数据，如提示和功能。实用工具钩子用于将实用工具合并到智能体中。最后，我们简要概述实用工具的实现。</p>
+
+<h3 id="基本代码结构">基本代码结构</h3>
+<p>典型智能体实用工具的基本代码结构包括提示/功能数据、钩子和功能实现。我们可以在不同的项目中添加特定的实用工具提示和功能。请注意，智能体 <strong>“6745151e-6d46-4a02-8de4-1c4f21c7da95”</strong> 被视为专用的实用工具助手，每个提示和功能都可以选择性地用作实用工具。<a href="#agent-utility-code-structure">图 3.1.1</a> 展示了提示、功能、钩子和 HTTP 实用工具实现的结构。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/agent-utility-code-structure.png" alt="code" />
+<br /></p>
+
+<h3 id="实用工具数据">实用工具数据</h3>
+<p>对于典型的智能体实用工具，至少需要添加一个提示和一个功能。实用工具名称的格式为 <strong>“[plugin name].[utility name]”</strong>，例如 “http.http-handler”。提示添加在 “templates” 文件夹下，推荐名称为 <strong>“util-[plugin name]-[function name].fn.liquid”</strong>，而功能添加在 “functions” 文件夹下，推荐名称为 <strong>“util-[plugin name]-[function name].json”</strong>。编译项目后，我们可以在以下位置找到聚合的实用工具助手文件夹：<strong>“\BotSharp\src\WebStarter\bin\Debug\net8.0\data\agents\6745151e-6d46-4a02-8de4-1c4f21c7da95”</strong>。</p>
+
+<h3 id="实用工具钩子">实用工具钩子</h3>
+<p>实用工具钩子用于将智能体实用工具连接到智能体系统。下面的代码片段展示了 HTTP 实用工具钩子的实现，我们在其中定义了实用工具名称、提示和功能。请注意，每个实用工具可以跨不同的智能体使用。</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HttpHandlerPlugin</span> <span class="p">:</span> <span class="n">IBotSharpPlugin</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Id</span> <span class="p">=&gt;</span> <span class="s">"2c1eb1c4-16e5-4c65-8ee4-032324c26b81"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"HTTP Handler"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">=&gt;</span> <span class="s">"Empower agent to handle HTTP request in RESTful API or GraphQL"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">IconUrl</span> <span class="p">=&gt;</span> <span class="s">"https://lirp.cdn-website.com/6f8d6d8a/dms3rep/multi/opt/API_Icon-640w.png"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">AgentIds</span> <span class="p">=&gt;</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"87c458fc-ec5f-40ae-8ed6-05dda8a07523"</span> <span class="p">};</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">RegisterDI</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">,</span> <span class="n">IConfiguration</span> <span class="n">config</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">services</span><span class="p">.</span><span class="nf">AddScoped</span><span class="p">(</span><span class="n">provider</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">settingService</span> <span class="p">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">ISettingService</span><span class="p">&gt;();</span>
+            <span class="k">return</span> <span class="n">settingService</span><span class="p">.</span><span class="n">Bind</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;(</span><span class="s">"HttpHandler"</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IAgentUtilityHook</span><span class="p">,</span> <span class="n">HttpHandlerUtilityHook</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="err">###</span> <span class="err">智能体钩子实现</span>
+<span class="err">智能体钩子用于在对话过程中附加实用工具提示和功能。</span><span class="p">**</span><span class="err">请注意，实用工具数据仅允许包含在对话上下文中</span><span class="p">**</span><span class="err">。实用工具机制在</span> <span class="p">**</span><span class="err">“</span><span class="n">OnAgentUtilityLoaded</span><span class="err">”</span><span class="p">**</span> <span class="err">钩子中实现，并在加载任何智能体时调用。</span>
+
+<span class="err">```</span><span class="n">csharp</span>
+<span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">Agent</span><span class="p">&gt;</span> <span class="nf">LoadAgent</span><span class="p">(</span><span class="kt">string</span> <span class="n">id</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="p">||</span> <span class="n">id</span> <span class="p">==</span> <span class="n">Guid</span><span class="p">.</span><span class="n">Empty</span><span class="p">.</span><span class="nf">ToString</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">var</span> <span class="n">hooks</span> <span class="p">=</span> <span class="n">_services</span><span class="p">.</span><span class="n">GetServices</span><span class="p">&lt;</span><span class="n">IAgentHook</span><span class="p">&gt;();</span>
+
+    <span class="c1">// Before agent is loaded.</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">hook</span> <span class="k">in</span> <span class="n">hooks</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span> <span class="p">!=</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">hook</span><span class="p">.</span><span class="nf">OnAgentLoading</span><span class="p">(</span><span class="k">ref</span> <span class="n">id</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">var</span> <span class="n">agent</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">GetAgent</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">agent</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">await</span> <span class="nf">InheritAgent</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+    <span class="nf">OverrideInstructionByChannel</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+    <span class="nf">AddOrUpdateParameters</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+
+    <span class="c1">// Populate state into dictionary</span>
+    <span class="n">agent</span><span class="p">.</span><span class="n">TemplateDict</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;();</span>
+    <span class="nf">PopulateState</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">TemplateDict</span><span class="p">);</span>
+
+    <span class="c1">// After agent is loaded</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">hook</span> <span class="k">in</span> <span class="n">hooks</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="n">hook</span><span class="p">.</span><span class="n">SelfId</span> <span class="p">!=</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">hook</span><span class="p">.</span><span class="nf">SetAget</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Instruction</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">hook</span><span class="p">.</span><span class="nf">OnInstructionLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Instruction</span><span class="p">,</span> <span class="n">agent</span><span class="p">.</span><span class="n">TemplateDict</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Functions</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">hook</span><span class="p">.</span><span class="nf">OnFunctionsLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Functions</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Samples</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">hook</span><span class="p">.</span><span class="nf">OnSamplesLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">Samples</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">hook</span><span class="p">.</span><span class="nf">OnAgentUtilityLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+        <span class="n">hook</span><span class="p">.</span><span class="nf">OnAgentLoaded</span><span class="p">(</span><span class="n">agent</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">_logger</span><span class="p">.</span><span class="nf">LogInformation</span><span class="p">(</span><span class="s">$"Loaded agent </span><span class="p">{</span><span class="n">agent</span><span class="p">}</span><span class="s">."</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">agent</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="实用工具功能实现">实用工具功能实现</h3>
+<p>这里介绍一个简单的实用工具功能实现。实际内容取决于您希望此实用工具完成的任务。下面的代码片段展示了“处理 HTTP 请求”功能的实现。请注意，属性“Name”必须与实用工具数据中添加的功能一致。“Indication”是一个可选属性，其内容将在用户等待助手响应时显示在聊天中。</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HandleHttpRequestFn</span> <span class="p">:</span> <span class="n">IFunctionCallback</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"util-http-handle_http_request"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Indication</span> <span class="p">=&gt;</span> <span class="s">"Handling http request"</span><span class="p">;</span>
+
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IServiceProvider</span> <span class="n">_services</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">HandleHttpRequestFn</span><span class="p">&gt;</span> <span class="n">_logger</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IHttpClientFactory</span> <span class="n">_httpClientFactory</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">IHttpContextAccessor</span> <span class="n">_context</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="n">BotSharpOptions</span> <span class="n">_options</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nf">HandleHttpRequestFn</span><span class="p">(</span><span class="n">IServiceProvider</span> <span class="n">services</span><span class="p">,</span>
+        <span class="n">ILogger</span><span class="p">&lt;</span><span class="n">HandleHttpRequestFn</span><span class="p">&gt;</span> <span class="n">logger</span><span class="p">,</span>
+        <span class="n">IHttpClientFactory</span> <span class="n">httpClientFactory</span><span class="p">,</span>
+        <span class="n">IHttpContextAccessor</span> <span class="n">context</span><span class="p">,</span>
+        <span class="n">BotSharpOptions</span> <span class="n">options</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">_services</span> <span class="p">=</span> <span class="n">services</span><span class="p">;</span>
+        <span class="n">_logger</span> <span class="p">=</span> <span class="n">logger</span><span class="p">;</span>
+        <span class="n">_httpClientFactory</span> <span class="p">=</span> <span class="n">httpClientFactory</span><span class="p">;</span>
+        <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="n">_options</span> <span class="p">=</span> <span class="n">options</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;</span> <span class="nf">Execute</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">args</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">LlmContextIn</span><span class="p">&gt;(</span><span class="n">message</span><span class="p">.</span><span class="n">FunctionArgs</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">url</span> <span class="p">=</span> <span class="n">args</span><span class="p">?.</span><span class="n">RequestUrl</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">method</span> <span class="p">=</span> <span class="n">args</span><span class="p">?.</span><span class="n">HttpMethod</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">content</span> <span class="p">=</span> <span class="n">args</span><span class="p">?.</span><span class="n">RequestContent</span><span class="p">;</span>
+
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">SendHttpRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">responseContent</span> <span class="p">=</span> <span class="k">await</span> <span class="nf">HandleHttpResponse</span><span class="p">(</span><span class="n">response</span><span class="p">);</span>
+            <span class="n">message</span><span class="p">.</span><span class="n">Content</span> <span class="p">=</span> <span class="n">responseContent</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">msg</span> <span class="p">=</span> <span class="s">$"Fail when sending http request. Url: </span><span class="p">{</span><span class="n">url</span><span class="p">}</span><span class="s">, method: </span><span class="p">{</span><span class="n">method</span><span class="p">}</span><span class="s">, content: </span><span class="p">{</span><span class="n">content</span><span class="p">}</span><span class="s">"</span><span class="p">;</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">msg</span><span class="p">}</span><span class="s">\n(Error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s">)"</span><span class="p">);</span>
+            <span class="n">message</span><span class="p">.</span><span class="n">Content</span> <span class="p">=</span> <span class="n">msg</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">HttpResponseMessage</span><span class="p">?&gt;</span> <span class="nf">SendHttpRequest</span><span class="p">(</span><span class="kt">string</span><span class="p">?</span> <span class="n">url</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">method</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">url</span><span class="p">))</span> <span class="k">return</span> <span class="k">null</span><span class="p">;</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">client</span> <span class="p">=</span> <span class="n">_httpClientFactory</span><span class="p">.</span><span class="nf">CreateClient</span><span class="p">();</span>
+        <span class="nf">AddRequestHeaders</span><span class="p">(</span><span class="n">client</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span> <span class="p">=</span> <span class="nf">BuildHttpRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">response</span> <span class="p">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="nf">SendAsync</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="p">==</span> <span class="k">null</span> <span class="p">||</span> <span class="p">!</span><span class="n">response</span><span class="p">.</span><span class="n">IsSuccessStatusCode</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"Response status code: </span><span class="p">{</span><span class="n">response</span><span class="p">?.</span><span class="n">StatusCode</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">void</span> <span class="nf">AddRequestHeaders</span><span class="p">(</span><span class="n">HttpClient</span> <span class="n">client</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span> <span class="s">$"</span><span class="p">{</span><span class="n">_context</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]}</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">settings</span> <span class="p">=</span> <span class="n">_services</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;();</span>
+        <span class="kt">var</span> <span class="n">origin</span> <span class="p">=</span> <span class="p">!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">settings</span><span class="p">.</span><span class="n">Origin</span><span class="p">)</span> <span class="p">?</span> <span class="n">settings</span><span class="p">.</span><span class="n">Origin</span> <span class="p">:</span> <span class="s">$"</span><span class="p">{</span><span class="n">_context</span><span class="p">.</span><span class="n">HttpContext</span><span class="p">.</span><span class="n">Request</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"Origin"</span><span class="p">]}</span><span class="s">"</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">origin</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">client</span><span class="p">.</span><span class="n">DefaultRequestHeaders</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"Origin"</span><span class="p">,</span> <span class="n">origin</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="p">(</span><span class="n">Uri</span><span class="p">,</span> <span class="n">HttpRequestMessage</span><span class="p">)</span> <span class="nf">BuildHttpRequest</span><span class="p">(</span><span class="kt">string</span> <span class="n">url</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">method</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">httpMethod</span> <span class="p">=</span> <span class="nf">GetHttpMethod</span><span class="p">(</span><span class="n">method</span><span class="p">);</span>
+        <span class="n">StringContent</span> <span class="n">httpContent</span><span class="p">;</span>
+
+        <span class="kt">var</span> <span class="n">requestUrl</span> <span class="p">=</span> <span class="n">url</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">httpMethod</span> <span class="p">==</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Get</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">httpContent</span> <span class="p">=</span> <span class="nf">BuildHttpContent</span><span class="p">(</span><span class="s">"{}"</span><span class="p">);</span>
+            <span class="n">requestUrl</span> <span class="p">=</span> <span class="nf">BuildQuery</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">httpContent</span> <span class="p">=</span> <span class="nf">BuildHttpContent</span><span class="p">(</span><span class="n">content</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(!</span><span class="n">Uri</span><span class="p">.</span><span class="nf">TryCreate</span><span class="p">(</span><span class="n">requestUrl</span><span class="p">,</span> <span class="n">UriKind</span><span class="p">.</span><span class="n">Absolute</span><span class="p">,</span> <span class="k">out</span> <span class="kt">var</span> <span class="n">uri</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">settings</span> <span class="p">=</span> <span class="n">_services</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;();</span>
+            <span class="kt">var</span> <span class="n">baseUri</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Uri</span><span class="p">(</span><span class="n">settings</span><span class="p">.</span><span class="n">BaseAddress</span><span class="p">);</span>
+            <span class="n">uri</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Uri</span><span class="p">(</span><span class="n">baseUri</span><span class="p">,</span> <span class="n">requestUrl</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="k">new</span> <span class="n">HttpRequestMessage</span>
+        <span class="p">{</span>
+            <span class="n">RequestUri</span> <span class="p">=</span> <span class="n">uri</span><span class="p">,</span>
+            <span class="n">Method</span> <span class="p">=</span> <span class="n">httpMethod</span><span class="p">,</span>
+            <span class="n">Content</span> <span class="p">=</span> <span class="n">httpContent</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">HttpMethod</span> <span class="nf">GetHttpMethod</span><span class="p">(</span><span class="kt">string</span><span class="p">?</span> <span class="n">method</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">localMethod</span> <span class="p">=</span> <span class="n">method</span><span class="p">?.</span><span class="nf">Trim</span><span class="p">()?.</span><span class="nf">ToUpper</span><span class="p">();</span>
+        <span class="n">HttpMethod</span> <span class="n">matchMethod</span><span class="p">;</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">localMethod</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">case</span> <span class="s">"GET"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Get</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="s">"DELETE"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Delete</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="s">"PUT"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Put</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="s">"Patch"</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Patch</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="p">:</span>
+                <span class="n">matchMethod</span> <span class="p">=</span> <span class="n">HttpMethod</span><span class="p">.</span><span class="n">Post</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">matchMethod</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">StringContent</span> <span class="nf">BuildHttpContent</span><span class="p">(</span><span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">str</span> <span class="p">=</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">JsonDocument</span><span class="p">&gt;(</span><span class="n">content</span> <span class="p">??</span> <span class="s">"{}"</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+            <span class="n">str</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="nf">Serialize</span><span class="p">(</span><span class="n">json</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"Error when build http content: </span><span class="p">{</span><span class="n">content</span><span class="p">}</span><span class="s">\n(Error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s">)"</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="k">new</span> <span class="nf">StringContent</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">,</span> <span class="n">MediaTypeNames</span><span class="p">.</span><span class="n">Application</span><span class="p">.</span><span class="n">Json</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">string</span> <span class="nf">BuildQuery</span><span class="p">(</span><span class="kt">string</span> <span class="n">url</span><span class="p">,</span> <span class="kt">string</span><span class="p">?</span> <span class="n">content</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="p">||</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">content</span><span class="p">))</span> <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
+
+        <span class="k">try</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">queries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;();</span>
+            <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">JsonDocument</span><span class="p">&gt;(</span><span class="n">content</span><span class="p">,</span> <span class="n">_options</span><span class="p">.</span><span class="n">JsonSerializerOptions</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">root</span> <span class="p">=</span> <span class="n">json</span><span class="p">.</span><span class="n">RootElement</span><span class="p">;</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">prop</span> <span class="k">in</span> <span class="n">root</span><span class="p">.</span><span class="nf">EnumerateObject</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">name</span> <span class="p">=</span> <span class="n">prop</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="nf">Trim</span><span class="p">();</span>
+                <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">prop</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="nf">ToString</span><span class="p">().</span><span class="nf">Trim</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">||</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">(</span><span class="k">value</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="k">continue</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="n">queries</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">name</span><span class="p">}</span><span class="s">=</span><span class="p">{</span><span class="k">value</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(!</span><span class="n">queries</span><span class="p">.</span><span class="nf">IsNullOrEmpty</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="n">url</span> <span class="p">+=</span> <span class="s">$"?</span><span class="p">{</span><span class="kt">string</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="sc">'&amp;'</span><span class="p">,</span> <span class="n">queries</span><span class="p">)}</span><span class="s">"</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">catch</span> <span class="p">(</span><span class="n">Exception</span> <span class="n">ex</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_logger</span><span class="p">.</span><span class="nf">LogWarning</span><span class="p">(</span><span class="s">$"Error when building url query. Url: </span><span class="p">{</span><span class="n">url</span><span class="p">}</span><span class="s">, Content: </span><span class="p">{</span><span class="n">content</span><span class="p">}</span><span class="s">\n(Error: </span><span class="p">{</span><span class="n">ex</span><span class="p">.</span><span class="n">Message</span><span class="p">}</span><span class="s">)"</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">url</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="nf">HandleHttpResponse</span><span class="p">(</span><span class="n">HttpResponseMessage</span><span class="p">?</span> <span class="n">response</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">response</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">return</span> <span class="kt">string</span><span class="p">.</span><span class="n">Empty</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="nf">ReadAsStringAsync</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="实用工具继承">实用工具继承</h3>
+<p>这里我们介绍一个新功能：实用工具继承。由于我们使用基于路由的多智能体架构，在处理用户请求时，不同的智能体可能会进入调用栈。通过实用工具继承，智能体不仅可以使用添加到自身的实用工具，还可以继承来自入口智能体的实用工具，入口智能体是第一个进入调用栈的智能体，例如路由智能体。<a href="#routing-architecture">图 3.5.1</a> 展示了一个典型的基于路由的多智能体架构示例，其中“Pizza Bot”是路由器，“Order Inquiry”、“Ordering”和“Payment”是任务智能体。当用户开始聊天时，“Pizza Bot”首先进入调用栈，接下来根据用户的实际请求，“Order Inquiry”、“Ordering”或“Payment”会加入调用栈。例如，如果我们允许“Order Inquiry”继承实用工具，一旦“Order Inquiry”智能体开始工作，所有来自自身和“Pizza Bot”的实用工具都会被调用。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/routing-arch.png" alt="routing-arch" />
+<br /></p>
+
+<h3 id="智能体设置">智能体设置</h3>
+<p>这里我们介绍带有实用工具和继承的智能体设置。如我们在<a href="#utility-hooks">第 3.3 节</a>中介绍的，每个智能体的实用工具都包含实用工具名称、功能和提示。<a href="#router-utility-ui">图 3.6.1</a> 和 <a href="#task-agent-utility-ui">图 3.6.2</a> 分别展示了“Pizza Bot”和“Order Inquiry”的实用工具配置和实用工具继承。如图所示，我们可以通过智能体文件或智能体详细信息界面应用实用工具配置和继承。请注意，我们可以取消选中框以禁用某个实用工具（<a href="#router-utility-ui">图 3.6.2</a>）。</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8970b1e5-d260-4e2c-90b1-f1415a257c18"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pizza Bot"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AI 助手，可以帮助客户下达披萨订单。"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"routing"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"inheritAgentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01fcc3e5-9af7-49e6-ad7a-a760bd12dc4a"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"createdDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T10:39:32.2349685Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"updatedDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T14:39:32.2349686Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"iconUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://cdn-icons-png.flaticon.com/512/6978/6978255.png"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"pizza"</span><span class="w"> </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"utilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http.http-handler"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"functions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"util-http-handle_http_request"</span><span class="w"> </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"templates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"util-http-handle_http_request.fn"</span><span class="w"> </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"routingRules"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reasoner"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NaiveReasoner"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p><br /></p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/router-utility-ui.png" alt="router-utility-ui" />
+<br />
+<br />
+<br /></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Order Inquiry"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"检查订单状态，如付款、配送或烘焙。"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"createdDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T14:39:32.2349685Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"updatedDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-08-18T14:39:32.2349686Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b284db86-e9c2-4c25-a59e-4649797dd130"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"isPublic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mergeUtility"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"pizza"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p><br /></p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/task-agent-utility-ui.png" alt="task-agent-utility-ui" />
+<br /></p>
+<h2 id="智能体实用工具集成">智能体实用工具集成</h2>
+<p>在本节中，我们概述了集成自定义智能体实用工具的步骤，包括注册插件、注册程序集和添加项目引用。</p>
+
+<p>下面的代码片段展示了“BotSharp.Plugin.HttpHandler”中的“Http Handler Plugin”，我们可以在其中注册钩子和其他必要的设置。请注意，这里不需要注册功能，因为它会在应用程序级别自动注册。</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">HttpHandlerPlugin</span> <span class="p">:</span> <span class="n">IBotSharpPlugin</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Id</span> <span class="p">=&gt;</span> <span class="s">"2c1eb1c4-16e5-4c65-8ee4-032324c26b81"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"HTTP Handler"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Description</span> <span class="p">=&gt;</span> <span class="s">"Empower agent to handle HTTP request in RESTful API or GraphQL"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">IconUrl</span> <span class="p">=&gt;</span> <span class="s">"https://lirp.cdn-website.com/6f8d6d8a/dms3rep/multi/opt/API_Icon-640w.png"</span><span class="p">;</span>
+    <span class="k">public</span> <span class="kt">string</span><span class="p">[]</span> <span class="n">AgentIds</span> <span class="p">=&gt;</span> <span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"87c458fc-ec5f-40ae-8ed6-05dda8a07523"</span> <span class="p">};</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">RegisterDI</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">,</span> <span class="n">IConfiguration</span> <span class="n">config</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">services</span><span class="p">.</span><span class="nf">AddScoped</span><span class="p">(</span><span class="n">provider</span> <span class="p">=&gt;</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">settingService</span> <span class="p">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">GetRequiredService</span><span class="p">&lt;</span><span class="n">ISettingService</span><span class="p">&gt;();</span>
+            <span class="k">return</span> <span class="n">settingService</span><span class="p">.</span><span class="n">Bind</span><span class="p">&lt;</span><span class="n">HttpHandlerSettings</span><span class="p">&gt;(</span><span class="s">"HttpHandler"</span><span class="p">);</span>
+        <span class="p">});</span>
+
+        <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IAgentUtilityHook</span><span class="p">,</span> <span class="n">HttpHandlerUtilityHook</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="#register-assembly">图 4.1.1</a> 展示了在“appsettings.json”中注册实用工具程序集。需要注意的是，我们需要将项目引用添加到启动项目，例如 WebStarter。此外，我们需要在“Plugin”文件夹中添加任何新的自定义智能体实用工具，而不是在“BotSharp”文件夹中。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/register-assembly.png" alt="register-assembly" />
+<br /></p>
+
+<h2 id="用例演示">用例演示</h2>
+<p>在本节中，我们演示了一个 HTTP 实用工具。在我们设置并集成自定义智能体实用工具到后端后，我们可以启动 BotSharp-UI 并进入任何特定智能体。<a href="#add-utility">图 5.1.1</a> 展示了“Chatbot”智能体的一个示例，我们可以在高亮部分添加任何已注册的实用工具。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/add-utility.png" alt="add-utility" />
+<br /></p>
+
+<p>一旦我们添加了实用工具，我们可以通过点击左上角的机器人图标来初始化对话。<a href="#chat-window-demo">图 5.1.2</a> 展示了对话窗口，我们可以在左侧面板找到实用工具的数量。我们还可以点击智能体名称返回智能体页面。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/chat-window-demo.png" alt="chat-window-demo" />
+<br /></p>
+
+<p>在这里我们使用虚拟 REST API（来源：https://dummy.restapiexample.com/）进行演示。<a href="#dummy-http">图 5.1.3</a> 显示了在与“Chatbot”的对话中发送的各种 HTTP 请求。我们可以看到，“Http Handler”实用工具成功扩展了智能体发送 HTTP 请求和接收响应的能力。</p>
+
+<p><img src="/botsharp-doc/zh/guide/architecture/assets/agent-utility/dummy-http.png" alt="dummy-http" />
+<br /></p>
+
+<h2 id="总结">总结</h2>
+<p>在本文档中，我们介绍了智能体实用工具的概念，并提供了在 AI 项目“BotSharp”中添加自定义智能体实用工具的逐步说明。</p>
+
+<p>智能体实用工具旨在通过添加额外的提示和功能来增强智能体执行专门任务的能力，例如发送 HTTP 请求、读取图像和生成图像。</p>
+
+<p>智能体实用工具的设置和集成分别在<a href="#agent-utility-setup">第 3 节</a>和<a href="#agent-utility-integration">第 4 节</a>中逐步解释。</p>
+
+<p>我们通过演示 HTTP 实用工具结束本文档，证明该实用工具可以在与智能体的聊天中处理各种 HTTP 请求。</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/architecture/agent-utility.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Agent Introduction | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Agent Introduction" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/agent/intro.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/agent/intro.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Agent Introduction" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Agent Introduction","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/agent/intro.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="agent-introduction">Agent Introduction</h1>
+
+<p>An agent helps you process user sentences (unstructure data) into structure data that you can use to return an appropriate response.</p>
+
+<p>Agent is a collection that contains prompt words and function Json Schema definitions, few-shot examples and knowledge base data. You can create multiple different Agents to perform specific operations in specific domains. BotSharp has built-in maintenance for Agents, including creating, updating and deleting, importing and exporting. Agents are divided into <code class="language-plaintext highlighter-rouge">task agents</code>, <code class="language-plaintext highlighter-rouge">routing (non-task) agents</code>, <code class="language-plaintext highlighter-rouge">evaluating agents</code> and <code class="language-plaintext highlighter-rouge">static agents</code>. Business domain agents belong to task agents, and routers belong to non-task agents, static agents don’t have capabilities to interact with external environment.</p>
+
+<h2 id="my-agent">My Agent</h2>
+<p>After creating the platform account, you can start to enter the steps of creating the Agent.</p>
+
+<h3 id="agent-creation">Agent creation</h3>
+<p>Suppose we need to write a Pizza restaurant order AI Bot. First, specify a name and description, then call the <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/request/1346299-dc57eddb-a3eb-41f1-9c6c-ac65f9d8d510">Agent creation</a> API to create a new robot, and the system will return an internally used Agent Id. This Id needs to be used in subsequent interactions.</p>
+
+<p><img src="/botsharp-doc/en/guide/agent/assets/agent-creation.png" alt="Alt text" /></p>
+
+<h3 id="agent-instruction">Agent instruction</h3>
+<p>BotSharp uses the latest large language model in natural language understanding, can interact with OpenAI’s ChatGPT, and also supports the most widely used open source large language model <a href="https://ai.meta.com/blog/large-language-model-llama-meta-ai/">LLaMA</a> and its fine-tuning model. In this example, we use <a href="https://azure.microsoft.com/en-us/products/ai-services/openai-service">Azure OpenAI</a> as the LLM engine.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"LlmProviders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-openai"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Models"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-35-turbo"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"ApiKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://gpt-35-turbo.openai.azure.com/"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chat"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"PromptCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0015</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"CompletionCost"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.002</span><span class="w">
+        </span><span class="p">}]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If you use the installation package to run, please ensure that the <a href="https://www.nuget.org/packages/BotSharp.Plugin.AzureOpenAI">BotSharp.Plugin.AzureOpenAI</a> plugin package is installed.</p>
+
+<p>Now we can update the prompt to the chatbot definition through the <a href="https://www.postman.com/orange-flare-634868/workspace/botsharp/request/1346299-01c38741-987b-42af-850d-1b1e21b506df">Agent Update</a> API.</p>
+
+<p><img src="/botsharp-doc/en/guide/agent/assets/agent-update.png" alt="Alt text" /></p>
+
+<p>After the update is successful, the robot will have a system prompt, and the subsequent dialogue will interact with the user based on the background knowledge of the system prompt. So far, the creation of the Agent has been completed, but the real dialogue has not yet started. The following will continue to introduce the last step, the <a href="/botsharp-doc/en/guide/conversation/intro.html">Agent Conversation</a> part.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/agent/intro.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

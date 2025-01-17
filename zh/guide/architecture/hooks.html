@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>钩子 | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="钩子" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/architecture/hooks.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/architecture/hooks.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="钩子" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"钩子","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/architecture/hooks.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="钩子">钩子</h1>
+
+<p><code class="language-plaintext highlighter-rouge">Hook</code> 是 <code class="language-plaintext highlighter-rouge">BotSharp</code> 中的一个位置，允许你插入一个模块以提供不同的行为或做出反应。</p>
+
+<h2 id="代理钩子">代理钩子</h2>
+<p><code class="language-plaintext highlighter-rouge">IAgentHook</code></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 当代理加载时触发。</span>
+<span class="kt">bool</span> <span class="nf">OnAgentLoading</span><span class="p">(</span><span class="k">ref</span> <span class="kt">string</span> <span class="n">id</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">OnInstructionLoaded</span><span class="p">(</span><span class="kt">string</span> <span class="n">template</span><span class="p">,</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;</span> <span class="n">dict</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">OnFunctionsLoaded</span><span class="p">(</span><span class="n">List</span><span class="p">&lt;</span><span class="n">FunctionDef</span><span class="p">&gt;</span> <span class="n">functions</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">OnSamplesLoaded</span><span class="p">(</span><span class="k">ref</span> <span class="kt">string</span> <span class="n">samples</span><span class="p">);</span>
+
+<span class="c1">// 当代理完全加载时触发。</span>
+<span class="k">void</span> <span class="nf">OnAgentLoaded</span><span class="p">(</span><span class="n">Agent</span> <span class="n">agent</span><span class="p">);</span>
+</code></pre></div></div>
+<p>有关代理钩子的更多信息，请访问 <a href="/botsharp-doc/zh/guide/agent/hook.html">代理钩子</a>。</p>
+
+<h2 id="对话钩子">对话钩子</h2>
+<p><code class="language-plaintext highlighter-rouge">IConversationHook</code></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 每次新对话时触发。</span>
+<span class="n">Task</span> <span class="nf">OnConversationInitialized</span><span class="p">(</span><span class="n">Conversation</span> <span class="n">conversation</span><span class="p">);</span>
+<span class="n">Task</span> <span class="nf">OnDialogsLoaded</span><span class="p">(</span><span class="n">List</span><span class="p">&lt;</span><span class="n">RoleDialogModel</span><span class="p">&gt;</span> <span class="n">dialogs</span><span class="p">);</span>
+<span class="n">Task</span> <span class="nf">OnMessageReceived</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+
+<span class="c1">// 在 LLM 调用函数之前触发。</span>
+<span class="n">Task</span> <span class="nf">OnFunctionExecuting</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+
+<span class="c1">// 当函数调用完成时触发。</span>
+<span class="n">Task</span> <span class="nf">OnFunctionExecuted</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+<span class="n">Task</span> <span class="nf">OnResponseGenerated</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+
+<span class="c1">// LLM 检测到当前任务已完成。</span>
+<span class="n">Task</span> <span class="nf">OnCurrentTaskEnding</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+
+<span class="c1">// LLM 检测到用户有结束对话的意图。</span>
+<span class="n">Task</span> <span class="nf">OnConversationEnding</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+
+<span class="c1">// LLM 无法处理用户请求或用户请求人工介入。</span>
+<span class="n">Task</span> <span class="nf">OnHumanInterventionNeeded</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+</code></pre></div></div>
+<p>有关对话钩子的更多信息，请访问 <a href="/botsharp-doc/zh/guide/conversation/hook.html">对话钩子</a>。</p>
+
+<p><code class="language-plaintext highlighter-rouge">IConversationHook</code></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Task</span> <span class="nf">OnStateLoaded</span><span class="p">(</span><span class="n">ConversationState</span> <span class="n">state</span><span class="p">);</span>
+<span class="n">Task</span> <span class="nf">OnStateChanged</span><span class="p">(</span><span class="kt">string</span> <span class="n">name</span><span class="p">,</span> <span class="kt">string</span> <span class="n">preValue</span><span class="p">,</span> <span class="kt">string</span> <span class="n">currentValue</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="内容生成钩子">内容生成钩子</h2>
+<p><code class="language-plaintext highlighter-rouge">IContentGeneratingHook</code></p>
+
+<p>模型内容生成钩子，可用于日志记录、指标和跟踪。</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 在内容生成之前。</span>
+<span class="n">Task</span> <span class="nf">BeforeGenerating</span><span class="p">(</span><span class="n">Agent</span> <span class="n">agent</span><span class="p">,</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RoleDialogModel</span><span class="p">&gt;</span> <span class="n">conversations</span><span class="p">);</span>
+
+<span class="c1">// 在内容生成之后。</span>
+<span class="n">Task</span> <span class="nf">AfterGenerated</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">,</span> <span class="n">TokenStatsModel</span> <span class="n">tokenStats</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">IInstructHook</code></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Task</span> <span class="nf">BeforeCompletion</span><span class="p">(</span><span class="n">Agent</span> <span class="n">agent</span><span class="p">,</span> <span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">);</span>
+<span class="n">Task</span> <span class="nf">AfterCompletion</span><span class="p">(</span><span class="n">Agent</span> <span class="n">agent</span><span class="p">,</span> <span class="n">InstructResult</span> <span class="n">result</span><span class="p">);</span>
+</code></pre></div></div>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/architecture/hooks.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

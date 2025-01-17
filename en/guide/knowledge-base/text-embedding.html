@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Text Embedding | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Text Embedding" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/knowledge-base/text-embedding.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/knowledge-base/text-embedding.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Text Embedding" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Text Embedding","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/knowledge-base/text-embedding.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="text-embedding">Text Embedding</h1>
+
+<p>Text embeddings represent human language to computers, enabling tasks like semantic search. <code class="language-plaintext highlighter-rouge">BotSharp</code> supports a variety of Embedding methods, and supports the extension of more Embedding methods through engineering abstraction.</p>
+
+<h2 id="fasttext-embedding">fastText embedding</h2>
+<p><a href="https://fasttext.cc/">FastText</a> is an open-source, free, lightweight library that allows users to learn text representations and text classifiers. It works on standard, generic hardware. Models can later be reduced in size to even fit on mobile devices. In order to use the fastText embedding method, please make sure to install <a href="https://www.nuget.org/packages/BotSharp.Plugin.MetaAI">BotSharp.Plugin.MetaAI</a>, and enable this plugin in your local settings. It is also necessary to <a href="https://fasttext.cc/docs/en/english-vectors.html">download</a> the pre-trained model of fastText and specify the location of the model in the settings.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"PluginLoader"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Assemblies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"BotSharp.Plugin.MetaAI"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"Plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"KnowledgeBasePlugin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"MemVecDbPlugin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"MetaAiPlugin"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"KnowledgeBase"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"TextEmbedding"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fastTextEmbeddingProvider"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"MetaAi"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"fastText"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"ModelPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"crawl-300d-2M-subword.bin"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="llamasharptextembeddingprovider">LLamaSharp.TextEmbeddingProvider</h2>
+<p><code class="language-plaintext highlighter-rouge">LLamaSharp</code> also provides an LLM embedding. For more operation methods of LLamaSharp, please refer to its <a href="https://github.com/SciSharp/LLamaSharp">repo address</a> .
+You need to download the corresponding LLM open source model like <code class="language-plaintext highlighter-rouge">llama2</code> to the local.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"PluginLoader"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Assemblies"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"BotSharp.Core"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"Plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"KnowledgeBasePlugin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"MemVecDbPlugin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"LLamaSharpPlugin"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"KnowledgeBase"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"TextEmbedding"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LLamaSharp.TextEmbeddingProvider"</span><span class="w">
+</span><span class="p">}</span><span class="err">,</span><span class="w">
+
+</span><span class="nl">"LlamaSharp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"ModelPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"llama-2-7b-chat.ggmlv3.q3_K_S.bin"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="tensorflow-bert">TensorFlow BERT</h2>
+
+<h2 id="train-your-own-embedding">Train your own embedding</h2>
+<p>You can also train an embedding model yourself from scratch using <a href="https://github.com/SciSharp/TensorFlow.NET">TensorFlow.NET</a>.</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/knowledge-base/text-embedding.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

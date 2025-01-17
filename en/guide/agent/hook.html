@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Agent Hook | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Agent Hook" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/agent/hook.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/agent/hook.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Agent Hook" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Agent Hook","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/agent/hook.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="agent-hook">Agent Hook</h1>
+<p>Agent Hook allows you to dynamically modify the Agent in your business code, such as adding callback functions and modifying system prompt words.
+Agent Hook is defined through <code class="language-plaintext highlighter-rouge">IAgentHook</code>:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">OnAgentLoading</span><span class="p">(</span><span class="k">ref</span> <span class="kt">string</span> <span class="n">id</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">OnInstructionLoaded</span><span class="p">(</span><span class="kt">string</span> <span class="n">template</span><span class="p">,</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;</span> <span class="n">dict</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">OnFunctionsLoaded</span><span class="p">(</span><span class="n">List</span><span class="p">&lt;</span><span class="n">FunctionDef</span><span class="p">&gt;</span> <span class="n">functions</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="nf">OnSamplesLoaded</span><span class="p">(</span><span class="k">ref</span> <span class="kt">string</span> <span class="n">samples</span><span class="p">);</span>
+<span class="k">void</span> <span class="nf">OnAgentLoaded</span><span class="p">(</span><span class="n">Agent</span> <span class="n">agent</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="register-custom-hook-in-plugin">Register custom hook in plugin</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">MyPlugin</span> <span class="p">:</span> <span class="n">IBotSharpPlugin</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">RegisterDI</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">,</span> <span class="n">IConfiguration</span> <span class="n">config</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Register Hooks</span>
+        <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IAgentHook</span><span class="p">,</span> <span class="n">MyAgentHook</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Add a new class inherts from <code class="language-plaintext highlighter-rouge">AgentHookBase</code> abstract class which has interface of <code class="language-plaintext highlighter-rouge">IAgentHook</code>.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">MyAgentHook</span> <span class="p">:</span> <span class="n">AgentHookBase</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">MyAgentHook</span><span class="p">(</span><span class="n">IServiceProvider</span> <span class="n">services</span><span class="p">,</span> <span class="n">AgentSettings</span> <span class="n">settings</span><span class="p">)</span> 
+        <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="inject-function">Inject function</h2>
+<p>You can dynamically inject the LLM Callback function into the currently loaded Agent through Agent Hook.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">MyAgentHook</span> <span class="p">:</span> <span class="n">AgentHookBase</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">MyAgentHook</span><span class="p">(</span><span class="n">IServiceProvider</span> <span class="n">services</span><span class="p">,</span> <span class="n">AgentSettings</span> <span class="n">settings</span><span class="p">)</span> 
+        <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">services</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">OnFunctionsLoaded</span><span class="p">(</span><span class="n">List</span><span class="p">&lt;</span><span class="n">FunctionDef</span><span class="p">&gt;</span> <span class="n">functions</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Inject LLM callback function</span>
+        <span class="n">functions</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">FunctionDef</span>
+        <span class="p">{</span>
+            <span class="n">Name</span> <span class="p">=</span> <span class="s">"function_name"</span><span class="p">,</span>
+            <span class="n">Description</span> <span class="p">=</span> <span class="s">"description of how LLM will utilize this function."</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="k">base</span><span class="p">.</span><span class="nf">OnFunctionsLoaded</span><span class="p">(</span><span class="n">functions</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Implement the concrete function of <code class="language-plaintext highlighter-rouge">IFunctionCallback</code>.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">MyFunctionFn</span> <span class="p">:</span> <span class="n">IFunctionCallback</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">=&gt;</span> <span class="s">"function_name"</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="kt">bool</span><span class="p">&gt;</span> <span class="nf">Execute</span><span class="p">(</span><span class="n">RoleDialogModel</span> <span class="n">message</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Access external API</span>
+        <span class="n">message</span><span class="p">.</span><span class="n">ExecutionResult</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">();</span>
+        <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/agent/hook.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

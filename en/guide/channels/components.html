@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Messaging Components | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Messaging Components" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/en/guide/channels/components.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/en/guide/channels/components.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Messaging Components" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Messaging Components","url":"https://greenshadezhang.github.io/botsharp-doc/en/guide/channels/components.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="messaging-components">Messaging Components</h1>
+
+<p>Conversations are a lot more than simple text messages when you are building a AI chatbot.  In addition to text, the <code class="language-plaintext highlighter-rouge">BotSharp</code> allows you to send rich-media, like audio, video, and images, and provides a set of structured messaging options in the form of message templates, quick replies, buttons and more. The UI rendering program can render components according to the returned data format.</p>
+
+<h2 id="text-messages">Text Messages</h2>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"messaging_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RESPONSE"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="s2">"Hello, world!"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="quick-replies">Quick Replies</h2>
+
+<p><code class="language-plaintext highlighter-rouge">content_type</code>: Text, Phone Number and Email</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"messaging_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RESPONSE"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pick a color:"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"quick_replies"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"content_type"</span><span class="p">:</span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"Red"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="s2">"&lt;POSTBACK_PAYLOAD&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="s2">"http://example.com/img/red.png"</span><span class="w">
+        </span><span class="p">},{</span><span class="w">
+            </span><span class="nl">"content_type"</span><span class="p">:</span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"Green"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="s2">"&lt;POSTBACK_PAYLOAD&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="s2">"http://example.com/img/green.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h2 id="sender-actions">Sender Actions</h2>
+
+<p>Setting expectations is crucial when creating a chatbot. Sender actions, a key tool, allow you to control typing and read receipt indicators. For instance, you can use them to show when a message has been seen or when a response is being typed, keeping users informed during interactions.</p>
+
+<p><code class="language-plaintext highlighter-rouge">sender_action</code>: mark_seen, typing_on and typing_off</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"sender_action"</span><span class="p">:</span><span class="s2">"typing_on"</span><span class="w">
+</span><span class="p">}</span><span class="w">  
+</span></code></pre></div></div>
+<h2 id="message-templates">Message Templates</h2>
+
+<p>Message templates are structured message formats used for various purposes to present complex information in a tidy manner during conversations, preventing messy text. These templates also include buttons to enhance interactivity. It gives a way for you to offer a richer in-conversation experience than standard text messages by integrating buttons, images, lists, and more alongside text a single message. Templates can be use for many purposes, such as displaying product information, asking the message recipient to choose from a pre-determined set of options, and showing search results.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"recipient"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"attachment"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"template"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"payload"</span><span class="p">:{</span><span class="w">
+            </span><span class="nl">"template_type"</span><span class="p">:</span><span class="s2">"TEMPLATE-TYPE"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"elements"</span><span class="p">:[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"TEMPLATE-TITLE"</span><span class="p">,</span><span class="w">
+                    </span><span class="err">...</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h3 id="button-template">Button template</h3>
+
+<p>The button template sends a text message with up to three attached buttons. This template is useful for offering the message recipient options to choose from, such as pre-determined responses to a question, or actions to take.</p>
+
+<p><code class="language-plaintext highlighter-rouge">type</code>: web_url, postback, phone_number, account_link (log in), account_unlink (log out)</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"template_type"</span><span class="p">:</span><span class="s2">"button"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"text"</span><span class="p">:</span><span class="s2">"What do you want to do next?"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"buttons"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="s2">"https://www.github.com"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"Visit Github"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"postback"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"Visit Github"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;STRING_SENT_TO_WEBHOOK&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"phone_number"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"&lt;BUTTON_TEXT&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"payload"</span><span class="p">:</span><span class="s2">"&lt;PHONE_NUMBER&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"account_link"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;YOUR_LOGIN_URL&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"account_unlink"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="generic-template">Generic template</h3>
+
+<p>The generic template is a simple structured message that includes a title, subtitle, image, and up to three buttons. You may also specify a <code class="language-plaintext highlighter-rouge">default_action</code> object that sets a URL that will be opened in the chat webview when the template is tapped.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"template_type"</span><span class="p">:</span><span class="s2">"generic"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"elements"</span><span class="p">:[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"Welcome!"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="s2">"https://raw.githubusercontent.com/fbsamples/original-coast-clothing/main/public/styles/male-work.jpg"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"subtitle"</span><span class="p">:</span><span class="s2">"We have the right hat for everyone."</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"default_action"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.originalcoastclothing.com/"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"webview_height_ratio"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tall"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"buttons"</span><span class="p">:[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"url"</span><span class="p">:</span><span class="s2">"https://www.originalcoastclothing.com/"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"title"</span><span class="p">:</span><span class="s2">"View Website"</span><span class="w">
+            </span><span class="p">}</span><span class="w">             
+          </span><span class="p">]</span><span class="w">      
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="form-template">Form template</h3>
+
+<p>Form template is used to collect information from the user side, and the UI allows users to fill in a structured form.</p>
+
+<h3 id="customer-feedback-template">Customer Feedback Template</h3>
+
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/en/guide/channels/components.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>

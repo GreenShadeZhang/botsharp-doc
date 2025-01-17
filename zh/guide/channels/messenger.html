@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Messenger | botsharp-doc</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Messenger" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Provide documentation for using botsharp in multiple languages" />
+<meta property="og:description" content="Provide documentation for using botsharp in multiple languages" />
+<link rel="canonical" href="https://greenshadezhang.github.io/botsharp-doc/zh/guide/channels/messenger.html" />
+<meta property="og:url" content="https://greenshadezhang.github.io/botsharp-doc/zh/guide/channels/messenger.html" />
+<meta property="og:site_name" content="botsharp-doc" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Messenger" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Provide documentation for using botsharp in multiple languages","headline":"Messenger","url":"https://greenshadezhang.github.io/botsharp-doc/zh/guide/channels/messenger.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/botsharp-doc/assets/css/style.css?v=3d2618142f9f02b2b8291054823fd3111a5f052b">
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/botsharp-doc/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+  <body>
+    <div class="container-lg px-3 my-5 markdown-body">
+      
+      <h1><a href="https://greenshadezhang.github.io/botsharp-doc/">botsharp-doc</a></h1>
+      
+
+      <h1 id="messenger">Messenger</h1>
+
+<p>BotSharp 的 Facebook 集成允许您轻松创建一个基于 BotSharp 技术的 Facebook Messenger 机器人，具备自然语言理解能力。</p>
+
+<p><strong>设置 Facebook</strong></p>
+
+<p>为了为您的代理设置 Facebook 集成，您需要以下内容：</p>
+
+<ul>
+  <li>
+    <p>一个 Facebook 账户</p>
+  </li>
+  <li>
+    <p>一个要添加代理的 Facebook 页面</p>
+  </li>
+</ul>
+
+<p>当用户访问您的页面并向您发送消息时，他们将与您的代理对话。</p>
+
+<p><strong>创建一个 Facebook 应用</strong></p>
+
+<ol>
+  <li>登录 <code class="language-plaintext highlighter-rouge">Facebook Developer Console</code>_。</li>
+  <li>点击右上角的 <strong>My Apps</strong>。</li>
+  <li>点击 <strong>Add a New App</strong> 并输入显示名称和联系电子邮件。</li>
+  <li>点击 <strong>Create App ID</strong>。</li>
+  <li>在下一页，点击 <strong>Messenger</strong> 选项的 <strong>Set up</strong> 按钮。</li>
+  <li>在 <strong>Token Generation</strong> 部分，选择您的一个 Facebook 页面（如果不存在，请创建一个新页面）。</li>
+</ol>
+
+<p>这将生成一个 <strong>Page Access Token</strong>。请妥善保管此令牌，因为您需要在 BotSharp 中输入它。</p>
+
+<p><strong>设置 BotSharp</strong></p>
+
+<ol>
+  <li>点击左侧菜单中的 Integrations 选项并打开 Facebook Messenger。在打开的对话框中，输入以下信息：
+    <ul>
+      <li><strong>Verify Token</strong> - 这可以是任何字符串，仅供您使用</li>
+      <li><strong>Page Access Token</strong> - 输入在 Facebook Developer Console 中生成的令牌</li>
+    </ul>
+  </li>
+  <li>或者编辑 App_Data\DbInitializer\Agents 下的 agents.json，更新 <strong>Page Access Token</strong> 和 <strong>Verify Token</strong>。</li>
+  <li>点击 <strong>Start</strong> 按钮。</li>
+</ol>
+
+<p><strong>Webhook 配置</strong></p>
+
+<p>要配置您的代理的 webhook，请返回 Facebook Developer Console：</p>
+
+<ol>
+  <li>点击 Webhooks 部分下的 Setup Webhooks 按钮并输入以下信息：
+    <ul>
+      <li><strong>Callback URL</strong> - 这是 Facebook Messenger 集成页面上提供的 URL</li>
+      <li><strong>Verify Token</strong> - 这是您创建的令牌</li>
+      <li>在 Subscription Fields 下勾选 <strong>messages</strong> 和 <strong>messaging_postbacks</strong> 选项</li>
+    </ul>
+  </li>
+  <li>点击 <strong>Verify and Save</strong> 按钮。</li>
+</ol>
+
+<p><strong>测试</strong></p>
+
+<p>为了使您的代理可供测试，您需要将您的应用公开：</p>
+
+<ol>
+  <li>点击 Facebook Developer Console 左侧菜单中的 <strong>App Review</strong>。</li>
+  <li>点击 <strong>Make APP_NAME public</strong> 下的开关？系统会提示您选择应用的类别。</li>
+  <li>从列表中选择 <strong>Apps for Messenger</strong></li>
+  <li>点击 <strong>Confirm</strong> 按钮。</li>
+</ol>
+
+<p>您还需要为您的页面设置用户名。这是用户在使用您的代理时聊天的用户名。要设置用户名，请点击页面头像和标题下的 <strong>Create Page @Username</strong> 链接。</p>
+
+<p>.. _Facebook Developer Console: https://developers.facebook.com</p>
+
+
+      
+      <div class="footer border-top border-gray-light mt-5 pt-3 text-right text-gray">
+        This site is open source. <a href="https://github.com/GreenShadeZhang/botsharp-doc/edit/gh-pages/zh/guide/channels/messenger.md">Improve this page</a>.
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
+    <script>anchors.add();</script>
+  </body>
+</html>
