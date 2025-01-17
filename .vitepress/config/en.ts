@@ -17,7 +17,7 @@ export const en = defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/GreenShadeZhang/botsharp-doc/:path',
+      pattern: 'https://github.com/GreenShadeZhang/botsharp-doc/blob/main/:path',
       text: 'Edit this page on GitHub'
     },
 
