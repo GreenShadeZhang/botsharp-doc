@@ -3,6 +3,8 @@
   "version": "1.0",
   "description": "botsharp doc",
   "author": "Gil Zhang <gil.zhang.dev@outlook.com>",
+  "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",

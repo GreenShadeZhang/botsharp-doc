@@ -8,7 +8,7 @@ import {
 
 export const shared = defineConfig({
   title: 'BotSharp',
-
+  ignoreDeadLinks: true,
   rewrites: {
     'en/:rest*': ':rest*'
   },
@@ -34,7 +34,6 @@ export const shared = defineConfig({
         const { localeIndex = 'root' } = env
         const codeCopyButtonTitle = (() => {
           switch (localeIndex) {
-
             case 'zh':
               return '复制代码'
             default:
@@ -59,20 +58,20 @@ export const shared = defineConfig({
 
   /* prettier-ignore */
   head: [
-    ['link', { rel: 'icon', type: 'image/png', href: '/Logo.png' }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/Logo.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
     ['meta', { name: 'theme-color', content: '#5f67ee' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en' }],
     ['meta', { property: 'og:title', content: 'BotSharp | The Open Source LLM Application Framework' }],
     ['meta', { property: 'og:site_name', content: 'BotSharp' }],
-    ['meta', { property: 'og:image', content: 'https://botsharp.verdure-hiro.cn/Logo.png' }],
+    ['meta', { property: 'og:image', content: 'https://botsharp.verdure-hiro.cn/logo.png' }],
     ['meta', { property: 'og:url', content: 'https://botsharp.verdure-hiro.cn/' }],
     ['script', { src: 'https://cdn.usefathom.com/script.js', 'data-site': 'AZBRSFGG', 'data-spa': 'auto', defer: '' }]
   ],
 
   themeConfig: {
-    logo: { src: '/Logo.png', width: 24, height: 24 },
+    logo: { src: '/logo.png', width: 24, height: 24 },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/SciSharp/BotSharp' }
@@ -98,7 +97,7 @@ export const shared = defineConfig({
         customIcon: {
           vitepress: localIconLoader(
             import.meta.url,
-            '../../public/Logo.png'
+            '../../public/logo.png'
           ),
           firebase: 'logos:firebase'
         }

@@ -19,7 +19,7 @@ hero:
       text: GitHub
       link: https://github.com/SciSharp/BotSharp
   image:
-    src: /BotSharp.gif
+    src: /botsharp.gif
     alt: BotSharp
 
 features:
